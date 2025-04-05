@@ -2,13 +2,17 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X, HelpCircle } from 'lucide-react';
+import { X, HelpCircle, PanelLeft, PanelRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const CodeEvaluator: React.FC = () => {
   const [query, setQuery] = useState('');
   const [answer, setAnswer] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showRightPanel, setShowRightPanel] = useState(true);
+  const isMobile = useIsMobile();
   
   const handleSubmit = () => {
     if (query.trim()) {
@@ -28,10 +32,63 @@ const CodeEvaluator: React.FC = () => {
     }
   };
 
+  // If on mobile, we only show one panel at a time
+  React.useEffect(() => {
+    if (isMobile) {
+      // Default to showing the input panel on mobile
+      setShowLeftPanel(true);
+      setShowRightPanel(false);
+    } else {
+      // On desktop, show both panels
+      setShowLeftPanel(true);
+      setShowRightPanel(true);
+    }
+  }, [isMobile]);
+
+  const toggleLeftPanel = () => {
+    if (isMobile) {
+      setShowLeftPanel(true);
+      setShowRightPanel(false);
+    } else {
+      setShowLeftPanel(!showLeftPanel);
+    }
+  };
+
+  const toggleRightPanel = () => {
+    if (isMobile) {
+      setShowLeftPanel(false);
+      setShowRightPanel(true);
+    } else {
+      setShowRightPanel(!showRightPanel);
+    }
+  };
+
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden">
+      {/* Panel Toggle Buttons (Visible on mobile and tablet) */}
+      <div className="flex justify-center gap-2 md:hidden p-2 bg-appBlue border-b border-appBorder">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={toggleLeftPanel}
+          className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+        >
+          <PanelLeft size={16} className="mr-1" />
+          Input
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={toggleRightPanel}
+          className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+        >
+          Results
+          <PanelRight size={16} className="ml-1" />
+        </Button>
+      </div>
+
       {/* Left Panel - Input Console */}
-      <div className="w-1/2 border-r border-appBorder p-4 flex flex-col">
+      <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex flex-col ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} border-r border-appBorder p-4`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <div className="w-2 h-2 bg-red-500 rounded-full mr-1.5"></div>
@@ -120,7 +177,7 @@ const CodeEvaluator: React.FC = () => {
       </div>
       
       {/* Right Panel - Evaluation Results */}
-      <div className="w-1/2 p-4 flex flex-col">
+      <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex flex-col ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} p-4`}>
         <div className="flex items-center mb-4">
           <div className="w-2 h-2 bg-appGreen rounded-full mr-1.5 opacity-70"></div>
           <span className="text-appText text-sm font-medium ml-2">Evaluation Results</span>

@@ -45,6 +45,27 @@
   body {
     @apply bg-appDark text-foreground;
   }
+  
+  html, body {
+    @apply h-full w-full overflow-hidden;
+  }
+  
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+/* Responsive scaling */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (orientation: portrait) {
+  .portrait-stack {
+    @apply flex-col;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -156,4 +177,11 @@ label::after {
 /* Add new animation for the intro page */
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out;
+}
+
+/* Ensure full height in mobile Safari */
+@supports (-webkit-touch-callout: none) {
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
 }
