@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from '@/lib/utils';
-import { X } from 'lucide-react';
+import { X, HelpCircle } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const CodeEvaluator: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -32,11 +32,51 @@ const CodeEvaluator: React.FC = () => {
     <div className="flex h-screen w-full overflow-hidden">
       {/* Left Panel - Input Console */}
       <div className="w-1/2 border-r border-appBorder p-4 flex flex-col">
-        <div className="flex items-center mb-4">
-          <div className="w-2 h-2 bg-red-500 rounded-full mr-1.5"></div>
-          <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1.5"></div>
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-1.5"></div>
-          <span className="text-appText text-sm font-medium ml-2">Input Console</span>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <div className="w-2 h-2 bg-red-500 rounded-full mr-1.5"></div>
+            <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1.5"></div>
+            <div className="w-2 h-2 bg-green-500 rounded-full mr-1.5"></div>
+            <span className="text-appText text-sm font-medium ml-2">Input Console</span>
+          </div>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
+                <HelpCircle size={16} className="mr-1" />
+                How to Use
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="bg-appBlue border-appBorder">
+              <SheetHeader>
+                <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
+                <SheetDescription className="text-appText">
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
+                      <p>Type your computer science or coding question in the Question field.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
+                      <p>Type your answer or solution in the Answer field.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
+                      <p>Click the Evaluate button to submit your answer for evaluation.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
+                      <p>Check the evaluation results in the right panel for feedback on your answer.</p>
+                    </div>
+                    <div className="pt-4 border-t border-appBorder mt-4">
+                      <p className="text-appGreen">Keyboard Shortcuts:</p>
+                      <p>Press Ctrl+Enter to quickly evaluate your answer.</p>
+                    </div>
+                  </div>
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
         </div>
         
         <div className="flex flex-col flex-grow">
