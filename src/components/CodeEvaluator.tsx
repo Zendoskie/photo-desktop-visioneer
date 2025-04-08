@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -106,7 +107,7 @@ const CodeEvaluator: React.FC = () => {
               <SheetContent className="bg-appBlue border-appBorder">
                 <SheetHeader>
                   <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
-                  <SheetDescription className="text-appText">
+                  <SheetDescription className="text-foreground">
                     <div className="space-y-4 mt-4">
                       <div>
                         <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
@@ -145,7 +146,7 @@ const CodeEvaluator: React.FC = () => {
           </div>
           <Textarea 
             placeholder="Enter your question..."
-            className="flex-none h-24 bg-appBlue text-white text-sm border-appBorder resize-none mb-4 focus:ring-appGreen focus:border-appGreen shadow-[0_0_15px_rgba(9,247,160,0.1)] transition-all duration-300"
+            className="flex-none h-24 bg-appBlue text-foreground text-sm border-appBorder resize-none mb-4 focus:ring-appGreen focus:border-appGreen transition-all duration-300"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -156,7 +157,7 @@ const CodeEvaluator: React.FC = () => {
           </div>
           <Textarea 
             placeholder=""
-            className="flex-grow bg-appBlue text-white text-sm border-appBorder mb-4 resize-none focus:ring-appGreen focus:border-appGreen shadow-[0_0_15px_rgba(9,247,160,0.1)] transition-all duration-300"
+            className="flex-grow bg-appBlue text-foreground text-sm border-appBorder mb-4 resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
           />
@@ -189,8 +190,8 @@ const CodeEvaluator: React.FC = () => {
           <div className="mb-1">
             <label className="text-appText text-xs font-medium">Rating</label>
           </div>
-          <div className="bg-appBlue border border-appBorder p-3 rounded-md shadow-[0_0_15px_rgba(9,247,160,0.05)]">
-            <span className="text-appText text-sm">Not evaluated</span>
+          <div className="bg-appBlue border border-appBorder p-3 rounded-md">
+            <span className="text-foreground text-sm">Not evaluated</span>
           </div>
         </div>
         
@@ -198,8 +199,8 @@ const CodeEvaluator: React.FC = () => {
           <div className="mb-1">
             <label className="text-appText text-xs font-medium">Justification</label>
           </div>
-          <div className="bg-appBlue border border-appBorder p-3 rounded-md h-full shadow-[0_0_15px_rgba(9,247,160,0.05)]">
-            <span className="text-appText text-sm">No justification provided</span>
+          <div className="bg-appBlue border border-appBorder p-3 rounded-md h-full">
+            <span className="text-foreground text-sm">No justification provided</span>
           </div>
         </div>
       </div>

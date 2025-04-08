@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,14 +14,14 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
-    --primary: 167 95% 48%;
+    --primary: 167 95% 28%;
     --primary-foreground: 222 47% 11%;
     
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
     
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 37%;
     
     --accent: 210 40% 96%;
     --accent-foreground: 222 47% 11%;
@@ -28,7 +29,7 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
     
-    --border: 220 13% 91%;
+    --border: 220 13% 81%;
     --input: 214 32% 91%;
     --ring: 222 47% 11%;
     
@@ -36,9 +37,9 @@
 
     --app-dark: #f5f7fa;
     --app-blue: #e9eef5;
-    --app-green: #0a9e6b;
+    --app-green: #0a7650;
     --app-border: #d0d7e3;
-    --app-text: #506078;
+    --app-text: #334155;
   }
 
   .dark {
@@ -119,12 +120,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1b3045;
-  border-radius: 4px;
+  @apply bg-appBorder rounded;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #264060;
+  @apply bg-appText/30;
 }
 
 .app-button {
@@ -187,7 +187,7 @@ label::after {
   left: 100%;
   width: 100vw;
   height: 1px;
-  background-color: #1b3045;
+  @apply bg-appBorder;
 }
 
 /* Container animation */
