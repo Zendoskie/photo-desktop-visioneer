@@ -4,12 +4,17 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const IntroPage: React.FC = () => {
   const isMobile = useIsMobile();
   
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-appDark p-4 sm:p-8 animate-fadeIn">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
       <div className="text-center mb-8 sm:mb-12">
         <h1 className={`text-4xl sm:text-6xl font-bold text-appGreen mb-4 tracking-tighter relative ${isMobile ? 'px-2' : ''}`}>
           <span className="relative inline-block">

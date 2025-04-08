@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { X, HelpCircle, PanelLeft, PanelRight } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const CodeEvaluator: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -32,14 +32,11 @@ const CodeEvaluator: React.FC = () => {
     }
   };
 
-  // If on mobile, we only show one panel at a time
   React.useEffect(() => {
     if (isMobile) {
-      // Default to showing the input panel on mobile
       setShowLeftPanel(true);
       setShowRightPanel(false);
     } else {
-      // On desktop, show both panels
       setShowLeftPanel(true);
       setShowRightPanel(true);
     }
@@ -65,29 +62,30 @@ const CodeEvaluator: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden">
-      {/* Panel Toggle Buttons (Visible on mobile and tablet) */}
-      <div className="flex justify-center gap-2 md:hidden p-2 bg-appBlue border-b border-appBorder">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={toggleLeftPanel}
-          className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
-        >
-          <PanelLeft size={16} className="mr-1" />
-          Input
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={toggleRightPanel}
-          className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
-        >
-          Results
-          <PanelRight size={16} className="ml-1" />
-        </Button>
+      <div className="flex justify-between gap-2 md:hidden p-2 bg-appBlue border-b border-appBorder">
+        <div className="flex">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={toggleLeftPanel}
+            className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+          >
+            <PanelLeft size={16} className="mr-1" />
+            Input
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={toggleRightPanel}
+            className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+          >
+            Results
+            <PanelRight size={16} className="ml-1" />
+          </Button>
+        </div>
+        <ThemeToggle />
       </div>
 
-      {/* Left Panel - Input Console */}
       <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex flex-col ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} border-r border-appBorder p-4`}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
@@ -97,43 +95,48 @@ const CodeEvaluator: React.FC = () => {
             <span className="text-appText text-sm font-medium ml-2">Input Console</span>
           </div>
           
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
-                <HelpCircle size={16} className="mr-1" />
-                How to Use
-              </Button>
-            </SheetTrigger>
-            <SheetContent className="bg-appBlue border-appBorder">
-              <SheetHeader>
-                <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
-                <SheetDescription className="text-appText">
-                  <div className="space-y-4 mt-4">
-                    <div>
-                      <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
-                      <p>Type your computer science or coding question in the Question field.</p>
+          <div className="flex items-center gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
+                  <HelpCircle size={16} className="mr-1" />
+                  How to Use
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="bg-appBlue border-appBorder">
+                <SheetHeader>
+                  <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
+                  <SheetDescription className="text-appText">
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
+                        <p>Type your computer science or coding question in the Question field.</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
+                        <p>Type your answer or solution in the Answer field.</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
+                        <p>Click the Evaluate button to submit your answer for evaluation.</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
+                        <p>Check the evaluation results in the right panel for feedback on your answer.</p>
+                      </div>
+                      <div className="pt-4 border-t border-appBorder mt-4">
+                        <p className="text-appGreen">Keyboard Shortcuts:</p>
+                        <p>Press Ctrl+Enter to quickly evaluate your answer.</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
-                      <p>Type your answer or solution in the Answer field.</p>
-                    </div>
-                    <div>
-                      <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
-                      <p>Click the Evaluate button to submit your answer for evaluation.</p>
-                    </div>
-                    <div>
-                      <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
-                      <p>Check the evaluation results in the right panel for feedback on your answer.</p>
-                    </div>
-                    <div className="pt-4 border-t border-appBorder mt-4">
-                      <p className="text-appGreen">Keyboard Shortcuts:</p>
-                      <p>Press Ctrl+Enter to quickly evaluate your answer.</p>
-                    </div>
-                  </div>
-                </SheetDescription>
-              </SheetHeader>
-            </SheetContent>
-          </Sheet>
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
+          </div>
         </div>
         
         <div className="flex flex-col flex-grow">
@@ -176,7 +179,6 @@ const CodeEvaluator: React.FC = () => {
         </div>
       </div>
       
-      {/* Right Panel - Evaluation Results */}
       <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex flex-col ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} p-4`}>
         <div className="flex items-center mb-4">
           <div className="w-2 h-2 bg-appGreen rounded-full mr-1.5 opacity-70"></div>

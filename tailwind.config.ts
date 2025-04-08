@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -53,11 +52,21 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				appDark: '#0f1722',
-				appBlue: '#172334',
-				appGreen: '#09f7a0',
-				appBorder: '#1b3045',
-				appText: '#aaadb0',
+				appDark: {
+					DEFAULT: 'var(--app-dark)',
+				},
+				appBlue: {
+					DEFAULT: 'var(--app-blue)',
+				},
+				appGreen: {
+					DEFAULT: 'var(--app-green)',
+				},
+				appBorder: {
+					DEFAULT: 'var(--app-border)',
+				},
+				appText: {
+					DEFAULT: 'var(--app-text)',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
