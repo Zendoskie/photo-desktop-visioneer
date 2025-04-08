@@ -66,6 +66,7 @@ export default {
 				},
 				appText: {
 					DEFAULT: 'var(--app-text)',
+					hover: 'var(--app-text-hover)',
 				},
 			},
 			borderRadius: {
