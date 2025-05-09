@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   CartesianGrid, 
@@ -93,7 +94,7 @@ const Analytics: React.FC = () => {
   return (
     <div className="h-full w-full">
       <ScrollArea className="h-full w-full">
-        <div className="flex flex-col p-4 bg-appDark">
+        <div className="flex flex-col p-4 pb-24">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-foreground text-xl font-medium">Analytics Dashboard</h2>
             <Button 
@@ -106,7 +107,7 @@ const Analytics: React.FC = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
             {/* Frequently Asked Questions */}
             <div className="bg-appBlue p-4 rounded-lg border border-appBorder">
               <h3 className="text-foreground text-lg font-medium mb-4">Frequently Asked Questions</h3>
