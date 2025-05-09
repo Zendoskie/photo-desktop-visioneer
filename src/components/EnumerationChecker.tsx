@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -182,8 +181,10 @@ const EnumerationChecker: React.FC = () => {
               className="flex-none h-16 bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
               value={expectedAnswer}
               onChange={(e) => setExpectedAnswer(e.target.value)}
-              type={showExpectedAnswer ? "text" : "password"}
-              style={{ color: showExpectedAnswer ? "inherit" : "transparent", textShadow: showExpectedAnswer ? "none" : "0 0 5px rgba(0,0,0,0.5)" }}
+              style={{ 
+                color: showExpectedAnswer ? "inherit" : "transparent", 
+                textShadow: showExpectedAnswer ? "none" : "0 0 5px rgba(0,0,0,0.5)" 
+              }}
             />
             <Button 
               variant="ghost" 
