@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle } from 'lucide-react';
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle, Mic } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -16,8 +16,64 @@ const CodeEvaluator: React.FC = () => {
   const [justification, setJustification] = useState('');
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showRightPanel, setShowRightPanel] = useState(true);
+  const [isListening, setIsListening] = useState(false);
+  const [activeField, setActiveField] = useState<'query' | 'answer' | null>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  
+  // Speech recognition setup
+  const startSpeechRecognition = (field: 'query' | 'answer') => {
+    setActiveField(field);
+    setIsListening(true);
+    
+    // Check if browser supports speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      recognition.onstart = () => {
+        console.log('Speech recognition started');
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+        
+        if (field === 'query') {
+          setQuery(transcript);
+        } else if (field === 'answer') {
+          setAnswer(transcript);
+        }
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        console.log('Speech recognition ended');
+        setIsListening(false);
+        setActiveField(null);
+      };
+      
+      recognition.start();
+      
+      // Stop recognition after 10 seconds
+      setTimeout(() => {
+        recognition.stop();
+      }, 10000);
+    } else {
+      alert('Speech recognition is not supported in your browser');
+      setIsListening(false);
+      setActiveField(null);
+    }
+  };
   
   const handleSubmit = () => {
     if (query.trim() && answer.trim()) {
@@ -174,14 +230,24 @@ const CodeEvaluator: React.FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => handleTextToSpeech(query)}
-              className="absolute right-2 top-2 text-appText hover:text-appGreen"
-            >
-              <Volume2 size={16} />
-            </Button>
+            <div className="absolute right-2 top-2 flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => startSpeechRecognition('query')}
+                className={`text-appText ${activeField === 'query' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
+              >
+                <Mic size={16} />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleTextToSpeech(query)}
+                className="text-appText hover:text-appGreen"
+              >
+                <Volume2 size={16} />
+              </Button>
+            </div>
           </div>
           
           <div className="mb-1">
@@ -194,14 +260,24 @@ const CodeEvaluator: React.FC = () => {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => handleTextToSpeech(answer)}
-              className="absolute right-2 top-2 text-appText hover:text-appGreen"
-            >
-              <Volume2 size={16} />
-            </Button>
+            <div className="absolute right-2 top-2 flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => startSpeechRecognition('answer')}
+                className={`text-appText ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
+              >
+                <Mic size={16} />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleTextToSpeech(answer)}
+                className="text-appText hover:text-appGreen"
+              >
+                <Volume2 size={16} />
+              </Button>
+            </div>
           </div>
           
           <div className="flex gap-2 mt-auto">

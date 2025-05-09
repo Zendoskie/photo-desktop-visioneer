@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle } from 'lucide-react';
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle, Mic } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -19,8 +20,66 @@ const EnumerationChecker: React.FC = () => {
   const [score, setScore] = useState({ correct: 0, wrong: 0, total: 0 });
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showRightPanel, setShowRightPanel] = useState(true);
+  const [isListening, setIsListening] = useState(false);
+  const [activeField, setActiveField] = useState<'question' | 'answer' | 'expectedAnswer' | null>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  
+  // Speech recognition setup
+  const startSpeechRecognition = (field: 'question' | 'answer' | 'expectedAnswer') => {
+    setActiveField(field);
+    setIsListening(true);
+    
+    // Check if browser supports speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      
+      recognition.onstart = () => {
+        console.log('Speech recognition started');
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join('');
+        
+        if (field === 'question') {
+          setQuestion(transcript);
+        } else if (field === 'answer') {
+          setAnswer(transcript);
+        } else if (field === 'expectedAnswer') {
+          setExpectedAnswer(transcript);
+        }
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+      
+      recognition.onend = () => {
+        console.log('Speech recognition ended');
+        setIsListening(false);
+        setActiveField(null);
+      };
+      
+      recognition.start();
+      
+      // Stop recognition after 10 seconds
+      setTimeout(() => {
+        recognition.stop();
+      }, 10000);
+    } else {
+      alert('Speech recognition is not supported in your browser');
+      setIsListening(false);
+      setActiveField(null);
+    }
+  };
   
   const handleSubmit = () => {
     if (question.trim() && answer.trim() && expectedAnswer.trim()) {
@@ -186,14 +245,24 @@ const EnumerationChecker: React.FC = () => {
                 textShadow: showExpectedAnswer ? "none" : "0 0 5px rgba(0,0,0,0.5)" 
               }}
             />
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => handleTextToSpeech(expectedAnswer)}
-              className="absolute right-2 top-2 text-appText hover:text-appGreen"
-            >
-              <Volume2 size={16} />
-            </Button>
+            <div className="absolute right-2 top-2 flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => startSpeechRecognition('expectedAnswer')}
+                className={`text-appText ${activeField === 'expectedAnswer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
+              >
+                <Mic size={16} />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleTextToSpeech(expectedAnswer)}
+                className="text-appText hover:text-appGreen"
+              >
+                <Volume2 size={16} />
+              </Button>
+            </div>
           </div>
           
           <div className="mb-1">
@@ -207,14 +276,24 @@ const EnumerationChecker: React.FC = () => {
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => handleTextToSpeech(question)}
-              className="absolute right-2 top-2 text-appText hover:text-appGreen"
-            >
-              <Volume2 size={16} />
-            </Button>
+            <div className="absolute right-2 top-2 flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => startSpeechRecognition('question')}
+                className={`text-appText ${activeField === 'question' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
+              >
+                <Mic size={16} />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleTextToSpeech(question)}
+                className="text-appText hover:text-appGreen"
+              >
+                <Volume2 size={16} />
+              </Button>
+            </div>
           </div>
           
           <div className="mb-1">
@@ -227,14 +306,24 @@ const EnumerationChecker: React.FC = () => {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => handleTextToSpeech(answer)}
-              className="absolute right-2 top-2 text-appText hover:text-appGreen"
-            >
-              <Volume2 size={16} />
-            </Button>
+            <div className="absolute right-2 top-2 flex gap-1">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => startSpeechRecognition('answer')}
+                className={`text-appText ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
+              >
+                <Mic size={16} />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleTextToSpeech(answer)}
+                className="text-appText hover:text-appGreen"
+              >
+                <Volume2 size={16} />
+              </Button>
+            </div>
           </div>
           
           <div className="flex gap-2 mt-auto">
