@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -184,16 +183,16 @@ const CodeEvaluator: React.FC = () => {
               </SheetTrigger>
               <SheetContent className="bg-appBlue border-appBorder">
                 <SheetHeader>
-                  <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
+                  <SheetTitle className="text-appGreen">How to Use the Evaluator</SheetTitle>
                   <SheetDescription className="text-foreground">
                     <div className="space-y-4 mt-4">
                       <div>
                         <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
-                        <p>Type your computer science or coding question in the Question field.</p>
+                        <p>Type your question in the Question field or use the microphone button for speech-to-text.</p>
                       </div>
                       <div>
                         <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
-                        <p>Type your answer or solution in the Answer field.</p>
+                        <p>Type your answer in the Answer field or use the microphone button for speech-to-text.</p>
                       </div>
                       <div>
                         <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
@@ -202,6 +201,12 @@ const CodeEvaluator: React.FC = () => {
                       <div>
                         <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
                         <p>Check the evaluation results in the right panel for feedback on your answer.</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Additional Features</h3>
+                        <p>- Use the AI Detector button to analyze if text is AI-generated</p>
+                        <p>- Use the speaker buttons for text-to-speech functionality</p>
+                        <p>- Navigate to AI Chat for more detailed assistance</p>
                       </div>
                       <div className="pt-4 border-t border-appBorder mt-4">
                         <p className="text-appGreen">Keyboard Shortcuts:</p>

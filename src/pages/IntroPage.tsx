@@ -18,7 +18,7 @@ const IntroPage: React.FC = () => {
       <div className="text-center mb-8 sm:mb-12">
         <h1 className={`text-4xl sm:text-6xl font-bold text-appGreen mb-4 tracking-tighter relative ${isMobile ? 'px-2' : ''}`}>
           <span className="relative inline-block">
-            KompyuThink
+            AI Evaluator
             <span className="absolute -bottom-2 left-0 right-0 h-1 bg-appGreen opacity-50 rounded-full"></span>
           </span>
         </h1>
@@ -43,7 +43,7 @@ const IntroPage: React.FC = () => {
       
       <div className="absolute bottom-4 sm:bottom-8 left-0 right-0 flex justify-center">
         <div className="text-foreground text-xs sm:text-sm opacity-70">
-          © 2025 KompyuThink - All rights reserved
+          © 2025 AI Evaluator - All rights reserved
         </div>
       </div>
     </div>
