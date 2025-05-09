@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const AIChat: React.FC = () => {
   const [message, setMessage] = React.useState('');
   const [chatHistory, setChatHistory] = React.useState<Array<{role: string, content: string}>>([
-    {role: 'assistant', content: 'Hello! I\'m your KompyuThink AI assistant. How can I help you today?'}
+    {role: 'assistant', content: 'Hello! I\'m your AI Evaluator assistant. How can I help you today?'}
   ]);
 
   const handleSendMessage = () => {
@@ -46,7 +46,7 @@ const AIChat: React.FC = () => {
               Back
             </Button>
           </Link>
-          <h1 className="text-lg font-medium text-foreground">KompyuThink AI Chat</h1>
+          <h1 className="text-lg font-medium text-foreground">AI Evaluator Chat</h1>
         </div>
         <ThemeToggle />
       </div>
