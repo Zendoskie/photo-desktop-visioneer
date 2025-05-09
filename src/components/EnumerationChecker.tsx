@@ -2,38 +2,46 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
-const CodeEvaluator: React.FC = () => {
-  const [query, setQuery] = useState('');
+const EnumerationChecker: React.FC = () => {
+  const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [expectedAnswer, setExpectedAnswer] = useState('');
+  const [showExpectedAnswer, setShowExpectedAnswer] = useState(true);
   const [submitted, setSubmitted] = useState(false);
-  const [rating, setRating] = useState('');
-  const [justification, setJustification] = useState('');
+  const [score, setScore] = useState({ correct: 0, wrong: 0, total: 0 });
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showRightPanel, setShowRightPanel] = useState(true);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
   const handleSubmit = () => {
-    if (query.trim() && answer.trim()) {
+    if (question.trim() && answer.trim() && expectedAnswer.trim()) {
       setSubmitted(true);
-      // Simulate evaluation results
-      setRating('4/5 - Above Average');
-      setJustification('The answer demonstrates good understanding of the core concepts and provides clear explanations. However, it could benefit from more specific examples to illustrate the points made.');
+      // Simple scoring logic (would be replaced with actual comparison)
+      const correct = answer.toLowerCase().includes(expectedAnswer.toLowerCase()) ? 1 : 0;
+      setScore({
+        correct: correct,
+        wrong: correct === 0 ? 1 : 0,
+        total: 1
+      });
     }
   };
   
   const handleClear = () => {
-    setQuery('');
+    setQuestion('');
     setAnswer('');
+    setExpectedAnswer('');
     setSubmitted(false);
-    setRating('');
-    setJustification('');
+    setScore({ correct: 0, wrong: 0, total: 0 });
   };
   
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -45,14 +53,6 @@ const CodeEvaluator: React.FC = () => {
   const handleTextToSpeech = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
-  };
-
-  const handleAIDetector = () => {
-    // Simulate AI detection
-    if (answer.trim()) {
-      alert("AI Detection Result: This appears to be " + 
-        (answer.length > 200 ? "87% likely to be AI-generated content." : "92% likely to be human-written content."));
-    }
   };
 
   React.useEffect(() => {
@@ -128,28 +128,28 @@ const CodeEvaluator: React.FC = () => {
               </SheetTrigger>
               <SheetContent className="bg-appBlue border-appBorder">
                 <SheetHeader>
-                  <SheetTitle className="text-appGreen">How to Use KompyuThink</SheetTitle>
+                  <SheetTitle className="text-appGreen">How to Use Enumeration Checker</SheetTitle>
                   <SheetDescription className="text-foreground">
                     <div className="space-y-4 mt-4">
                       <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
-                        <p>Type your computer science or coding question in the Question field.</p>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Expected Answer</h3>
+                        <p>Type the expected answer that will be used to check the submitted answer.</p>
                       </div>
                       <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Input Your Question</h3>
+                        <p>Type your enumeration question in the Question field.</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Provide Answer</h3>
                         <p>Type your answer or solution in the Answer field.</p>
                       </div>
                       <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
-                        <p>Click the Evaluate button to submit your answer for evaluation.</p>
-                      </div>
-                      <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
-                        <p>Check the evaluation results in the right panel for feedback on your answer.</p>
+                        <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Check</h3>
+                        <p>Click the Check button to verify if the answer matches the expected answer.</p>
                       </div>
                       <div className="pt-4 border-t border-appBorder mt-4">
                         <p className="text-appGreen">Keyboard Shortcuts:</p>
-                        <p>Press Ctrl+Enter to quickly evaluate your answer.</p>
+                        <p>Press Ctrl+Enter to quickly check your answer.</p>
                       </div>
                     </div>
                   </SheetDescription>
@@ -163,21 +163,53 @@ const CodeEvaluator: React.FC = () => {
         </div>
         
         <div className="flex flex-col flex-grow">
+          <div className="flex justify-between items-center mb-1">
+            <label className="text-appText text-xs font-medium">Expected Answer</label>
+            <div className="flex items-center">
+              <Label htmlFor="show-expected" className="mr-2 text-xs">
+                {showExpectedAnswer ? "Hide" : "Show"}
+              </Label>
+              <Switch 
+                id="show-expected" 
+                checked={showExpectedAnswer} 
+                onCheckedChange={setShowExpectedAnswer}
+              />
+            </div>
+          </div>
+          <div className="relative mb-4">
+            <Textarea 
+              placeholder="Enter the expected answer..."
+              className="flex-none h-16 bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
+              value={expectedAnswer}
+              onChange={(e) => setExpectedAnswer(e.target.value)}
+              type={showExpectedAnswer ? "text" : "password"}
+              style={{ color: showExpectedAnswer ? "inherit" : "transparent", textShadow: showExpectedAnswer ? "none" : "0 0 5px rgba(0,0,0,0.5)" }}
+            />
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleTextToSpeech(expectedAnswer)}
+              className="absolute right-2 top-2 text-appText hover:text-appGreen"
+            >
+              <Volume2 size={16} />
+            </Button>
+          </div>
+          
           <div className="mb-1">
             <label className="text-appText text-xs font-medium">Question</label>
           </div>
           <div className="relative mb-4">
             <Textarea 
-              placeholder="Enter your question..."
+              placeholder="Enter your enumeration question..."
               className="flex-none h-24 bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={handleKeyDown}
             />
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={() => handleTextToSpeech(query)}
+              onClick={() => handleTextToSpeech(question)}
               className="absolute right-2 top-2 text-appText hover:text-appGreen"
             >
               <Volume2 size={16} />
@@ -187,10 +219,10 @@ const CodeEvaluator: React.FC = () => {
           <div className="mb-1">
             <label className="text-appText text-xs font-medium">Answer</label>
           </div>
-          <div className="relative flex-grow">
+          <div className="relative mb-4 flex-grow">
             <Textarea 
-              placeholder=""
-              className="h-full w-full bg-appBlue text-foreground text-sm border-appBorder mb-4 resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
+              placeholder="Enter your answer..."
+              className="h-full w-full bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
@@ -213,16 +245,10 @@ const CodeEvaluator: React.FC = () => {
               Clear
             </Button>
             <Button 
-              onClick={handleAIDetector}
-              className="app-button flex-1 bg-appBlue hover:bg-opacity-80 border border-appBorder text-appText hover:text-appGreen transition-colors duration-300"
-            >
-              AI Detector
-            </Button>
-            <Button 
               onClick={handleSubmit}
               className="app-button flex-1 bg-appBlue hover:bg-opacity-80 border border-appBorder text-appGreen transition-colors duration-300 flex items-center justify-center gap-2"
             >
-              <span className="text-appGreen">✓</span> Evaluate
+              <span className="text-appGreen">✓</span> Check
             </Button>
           </div>
         </div>
@@ -232,7 +258,7 @@ const CodeEvaluator: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <div className="w-2 h-2 bg-appGreen rounded-full mr-1.5 opacity-70"></div>
-            <span className="text-appText text-sm font-medium ml-2">Evaluation Results</span>
+            <span className="text-appText text-sm font-medium ml-2">Check Results</span>
           </div>
           <Button 
             variant="ghost" 
@@ -247,19 +273,55 @@ const CodeEvaluator: React.FC = () => {
         
         <div className="mb-4">
           <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Rating</label>
+            <label className="text-appText text-xs font-medium">Score</label>
           </div>
           <div className="bg-appBlue border border-appBorder p-3 rounded-md">
-            <span className="text-foreground text-sm">{submitted ? rating : "Not evaluated"}</span>
+            {submitted ? (
+              <div className="flex flex-col gap-2">
+                <div className="flex justify-between">
+                  <span className="text-foreground text-sm">Correct:</span>
+                  <span className="text-appGreen font-mono">{score.correct}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-foreground text-sm">Wrong:</span>
+                  <span className="text-destructive font-mono">{score.wrong}</span>
+                </div>
+                <div className="flex justify-between border-t border-appBorder pt-2 mt-2">
+                  <span className="text-foreground text-sm font-medium">Total Score:</span>
+                  <span className="text-foreground font-mono font-medium">{score.correct}/{score.total}</span>
+                </div>
+              </div>
+            ) : (
+              <span className="text-foreground text-sm">Not checked yet</span>
+            )}
           </div>
         </div>
         
         <div className="flex-grow">
           <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Justification</label>
+            <label className="text-appText text-xs font-medium">Results</label>
           </div>
           <div className="bg-appBlue border border-appBorder p-3 rounded-md h-full overflow-y-auto">
-            <span className="text-foreground text-sm">{submitted ? justification : "No justification provided"}</span>
+            {submitted ? (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-appGreen text-sm font-medium mb-1">Expected Answer:</h3>
+                  <p className="text-foreground text-sm bg-appBlue/50 p-2 rounded">{expectedAnswer}</p>
+                </div>
+                <div>
+                  <h3 className="text-appGreen text-sm font-medium mb-1">Your Answer:</h3>
+                  <p className="text-foreground text-sm bg-appBlue/50 p-2 rounded">{answer}</p>
+                </div>
+                <div>
+                  <h3 className="text-appGreen text-sm font-medium mb-1">Assessment:</h3>
+                  <p className={`text-sm p-2 rounded ${score.correct > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                    {score.correct > 0 ? '✓ Correct Answer' : '✗ Incorrect Answer'}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <span className="text-foreground text-sm">Submit your answer to see results</span>
+            )}
           </div>
         </div>
       </div>
@@ -267,4 +329,4 @@ const CodeEvaluator: React.FC = () => {
   );
 };
 
-export default CodeEvaluator;
+export default EnumerationChecker;

@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Index from "./pages/Index";
 import IntroPage from "./pages/IntroPage";
 import NotFound from "./pages/NotFound";
+import AIChat from "./pages/AIChat";
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<IntroPage />} />
               <Route path="/evaluate" element={<Index />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="/enumeration" element={<Index activeTab="enumeration" />} />
+              <Route path="/analytics" element={<Index activeTab="analytics" />} />
+              <Route path="/ai-chat" element={<AIChat />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
