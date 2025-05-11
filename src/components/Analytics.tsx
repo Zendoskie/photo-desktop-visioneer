@@ -18,6 +18,11 @@ import { MessageCircle, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 // Sample data - would be replaced with actual data from a backend
 const dummyFrequentQuestions = [
@@ -104,53 +109,53 @@ const Analytics: React.FC = () => {
 
   return (
     <div className="h-full w-full">
-      <div className="p-2 h-full bg-appDark">
-        <div className="flex justify-between items-center mb-1">
-          <h2 className="text-foreground text-xl font-medium">Analytics Dashboard</h2>
+      <div className="p-1 h-full bg-appDark">
+        <div className="flex justify-between items-center mb-0.5">
+          <h2 className="text-foreground text-lg font-medium">Analytics Dashboard</h2>
           <Button 
             variant="ghost"
             onClick={() => navigate('/ai-chat')}
             className="text-appText hover:text-appGreen"
           >
-            <MessageCircle size={18} className="mr-2" />
+            <MessageCircle size={16} className="mr-1" />
             AI Chat
           </Button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
           {/* Frequently Asked Questions */}
-          <div className="bg-appBlue p-2 rounded-lg border border-appBorder relative">
+          <div className="bg-appBlue p-1.5 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Frequently Asked Questions</h3>
+              <h3 className="text-foreground text-xs font-medium">Frequently Asked Questions</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 className="h-5 w-5 hover:text-appGreen"
                 onClick={() => handleExpandChart('frequent')}
               >
-                <Maximize2 size={14} />
+                <Maximize2 size={12} />
               </Button>
             </div>
-            <div className="h-[26vh]">
+            <div className="h-[22vh]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyFrequentQuestions}
-                  margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+                  margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={9} tick={{fontSize: 8}} />
-                  <YAxis stroke="var(--app-text)" fontSize={9} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={7} tick={{fontSize: 7}} />
+                  <YAxis stroke="var(--app-text)" fontSize={7} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
                   />
-                  <Legend wrapperStyle={{fontSize: '9px'}} />
+                  <Legend wrapperStyle={{fontSize: '7px'}} />
                   <Line 
                     type="monotone" 
                     dataKey="frequency" 
                     name="Frequency"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 6 }} 
-                    strokeWidth={2}
+                    activeDot={{ r: 4 }} 
+                    strokeWidth={1.5}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -158,38 +163,38 @@ const Analytics: React.FC = () => {
           </div>
 
           {/* Line Graph of Scores */}
-          <div className="bg-appBlue p-2 rounded-lg border border-appBorder relative">
+          <div className="bg-appBlue p-1.5 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Score by Question</h3>
+              <h3 className="text-foreground text-xs font-medium">Score by Question</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 className="h-5 w-5 hover:text-appGreen"
                 onClick={() => handleExpandChart('scores')}
               >
-                <Maximize2 size={14} />
+                <Maximize2 size={12} />
               </Button>
             </div>
-            <div className="h-[26vh]">
+            <div className="h-[22vh]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyScoresByQuestion}
-                  margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+                  margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={9} />
-                  <YAxis stroke="var(--app-text)" fontSize={9} domain={[0, 100]} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={7} />
+                  <YAxis stroke="var(--app-text)" fontSize={7} domain={[0, 100]} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
                   />
-                  <Legend wrapperStyle={{fontSize: '9px'}} />
+                  <Legend wrapperStyle={{fontSize: '7px'}} />
                   <Line 
                     type="monotone" 
                     dataKey="score" 
                     name="Average Score"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 6 }} 
-                    strokeWidth={2}
+                    activeDot={{ r: 4 }} 
+                    strokeWidth={1.5}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -197,57 +202,57 @@ const Analytics: React.FC = () => {
           </div>
 
           {/* Score Distribution Pie Chart */}
-          <div className="bg-appBlue p-2 rounded-lg border border-appBorder relative">
+          <div className="bg-appBlue p-1.5 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Overall Score Distribution</h3>
+              <h3 className="text-foreground text-xs font-medium">Overall Score Distribution</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 className="h-5 w-5 hover:text-appGreen"
                 onClick={() => handleExpandChart('distribution')}
               >
-                <Maximize2 size={14} />
+                <Maximize2 size={12} />
               </Button>
             </div>
-            <div className="h-[26vh]">
+            <div className="h-[22vh]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                   <Pie
                     data={dummyScoreDistribution}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={60}
+                    outerRadius={45}
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    fontSize={9}
+                    fontSize={7}
                   >
                     {dummyScoreDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
                   />
-                  <Legend wrapperStyle={{fontSize: '9px'}} />
+                  <Legend wrapperStyle={{fontSize: '7px'}} layout="horizontal" verticalAlign="bottom" align="center" />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Dynamic Score Pie Chart */}
-          <div className="bg-appBlue p-2 rounded-lg border border-appBorder relative">
+          <div className="bg-appBlue p-1.5 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Question-Specific Scores</h3>
+              <h3 className="text-foreground text-xs font-medium">Question-Specific Scores</h3>
               <div className="flex items-center">
                 <Select 
                   value={selectedQuestion} 
                   onValueChange={setSelectedQuestion}
                 >
-                  <SelectTrigger className="w-[120px] h-6 bg-appDark border-appBorder focus:ring-appGreen text-xs mr-1">
-                    <SelectValue placeholder="Select Question" />
+                  <SelectTrigger className="w-[100px] h-5 bg-appDark border-appBorder focus:ring-appGreen text-xs mr-1">
+                    <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="bg-appBlue border-appBorder">
                     {dummyQuestionOptions.map((q) => (
@@ -261,33 +266,33 @@ const Analytics: React.FC = () => {
                   className="h-5 w-5 hover:text-appGreen"
                   onClick={() => handleExpandChart('question')}
                 >
-                  <Maximize2 size={14} />
+                  <Maximize2 size={12} />
                 </Button>
               </div>
             </div>
-            <div className="h-[26vh]">
+            <div className="h-[22vh]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                   <Pie
                     data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={60}
+                    outerRadius={45}
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    fontSize={9}
+                    fontSize={7}
                   >
                     {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
                   />
-                  <Legend wrapperStyle={{fontSize: '9px'}} />
+                  <Legend wrapperStyle={{fontSize: '7px'}} layout="horizontal" verticalAlign="bottom" align="center" />
                 </PieChart>
               </ResponsiveContainer>
             </div>
