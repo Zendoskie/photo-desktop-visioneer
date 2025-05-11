@@ -93,154 +93,154 @@ const Analytics: React.FC = () => {
 
   return (
     <div className="h-full w-full">
-      <ScrollArea className="h-full w-full">
-        <div className="flex flex-col p-4 pb-24">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-foreground text-xl font-medium">Analytics Dashboard</h2>
-            <Button 
-              variant="ghost"
-              onClick={() => navigate('/ai-chat')}
-              className="text-appText hover:text-appGreen"
-            >
-              <MessageCircle size={18} className="mr-2" />
-              AI Chat
-            </Button>
+      <div className="p-4 h-full">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-foreground text-xl font-medium">Analytics Dashboard</h2>
+          <Button 
+            variant="ghost"
+            onClick={() => navigate('/ai-chat')}
+            className="text-appText hover:text-appGreen"
+          >
+            <MessageCircle size={18} className="mr-2" />
+            AI Chat
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 h-[calc(100vh-100px)]">
+          {/* Frequently Asked Questions */}
+          <div className="bg-appBlue p-3 rounded-lg border border-appBorder">
+            <h3 className="text-foreground text-base font-medium mb-1">Frequently Asked Questions</h3>
+            <div className="h-[30vh]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={dummyFrequentQuestions}
+                  margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} />
+                  <YAxis stroke="var(--app-text)" fontSize={10} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="frequency" 
+                    name="Frequency"
+                    stroke="var(--app-green)" 
+                    activeDot={{ r: 8 }} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
-            {/* Frequently Asked Questions */}
-            <div className="bg-appBlue p-4 rounded-lg border border-appBorder">
-              <h3 className="text-foreground text-lg font-medium mb-4">Frequently Asked Questions</h3>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={dummyFrequentQuestions}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+
+          {/* Line Graph of Scores */}
+          <div className="bg-appBlue p-3 rounded-lg border border-appBorder">
+            <h3 className="text-foreground text-base font-medium mb-1">Score by Question</h3>
+            <div className="h-[30vh]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={dummyScoresByQuestion}
+                  margin={{ top: 5, right: 20, left: 5, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} />
+                  <YAxis stroke="var(--app-text)" fontSize={10} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="score" 
+                    name="Average Score"
+                    stroke="var(--app-green)" 
+                    activeDot={{ r: 8 }} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Score Distribution Pie Chart */}
+          <div className="bg-appBlue p-3 rounded-lg border border-appBorder">
+            <h3 className="text-foreground text-base font-medium mb-1">Overall Score Distribution</h3>
+            <div className="h-[30vh]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={dummyScoreDistribution}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    nameKey="name"
+                    label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    fontSize={10}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                    <XAxis dataKey="name" stroke="var(--app-text)" />
-                    <YAxis stroke="var(--app-text)" />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
-                    />
-                    <Legend />
-                    <Line 
-                      type="monotone" 
-                      dataKey="frequency" 
-                      name="Frequency"
-                      stroke="var(--app-green)" 
-                      activeDot={{ r: 8 }} 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                    {dummyScoreDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Dynamic Score Pie Chart */}
+          <div className="bg-appBlue p-3 rounded-lg border border-appBorder">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-1">
+              <h3 className="text-foreground text-base font-medium">Question-Specific Scores</h3>
+              <div className="mt-1 md:mt-0 w-full md:w-auto">
+                <Select 
+                  value={selectedQuestion} 
+                  onValueChange={setSelectedQuestion}
+                >
+                  <SelectTrigger className="w-full md:w-[180px] h-7 bg-appDark border-appBorder focus:ring-appGreen text-xs">
+                    <SelectValue placeholder="Select Question" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-appBlue border-appBorder">
+                    {dummyQuestionOptions.map((q) => (
+                      <SelectItem key={q.id} value={q.id} className="text-xs">{q.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-
-            {/* Line Graph of Scores */}
-            <div className="bg-appBlue p-4 rounded-lg border border-appBorder">
-              <h3 className="text-foreground text-lg font-medium mb-4">Score by Question</h3>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={dummyScoresByQuestion}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            <div className="h-[30vh]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    nameKey="name"
+                    label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    fontSize={10}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                    <XAxis dataKey="name" stroke="var(--app-text)" />
-                    <YAxis stroke="var(--app-text)" />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
-                    />
-                    <Legend />
-                    <Line 
-                      type="monotone" 
-                      dataKey="score" 
-                      name="Average Score"
-                      stroke="var(--app-green)" 
-                      activeDot={{ r: 8 }} 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Score Distribution Pie Chart */}
-            <div className="bg-appBlue p-4 rounded-lg border border-appBorder">
-              <h3 className="text-foreground text-lg font-medium mb-4">Overall Score Distribution</h3>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={dummyScoreDistribution}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {dummyScoreDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Dynamic Score Pie Chart */}
-            <div className="bg-appBlue p-4 rounded-lg border border-appBorder">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                <h3 className="text-foreground text-lg font-medium">Question-Specific Scores</h3>
-                <div className="mt-2 md:mt-0 w-full md:w-auto">
-                  <Select 
-                    value={selectedQuestion} 
-                    onValueChange={setSelectedQuestion}
-                  >
-                    <SelectTrigger className="w-full md:w-[200px] bg-appDark border-appBorder focus:ring-appGreen">
-                      <SelectValue placeholder="Select Question" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-appBlue border-appBorder">
-                      {dummyQuestionOptions.map((q) => (
-                        <SelectItem key={q.id} value={q.id}>{q.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+                    {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };
