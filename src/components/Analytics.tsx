@@ -102,11 +102,19 @@ const Analytics: React.FC = () => {
   };
 
   // Custom label for pie charts to ensure labels are visible
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
-    const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
+    // Check if chart is expanded to adjust label position and size
+    const isExpanded = expandedChart !== null;
+    const labelRadiusMultiplier = isExpanded ? 0.6 : 0.5; // Adjust label position for smaller charts
+    const actualRadius = innerRadius + (outerRadius - innerRadius) * labelRadiusMultiplier;
+
+    const x = cx + actualRadius * Math.cos(-midAngle * Math.PI / 180);
+    const y = cy + actualRadius * Math.sin(-midAngle * Math.PI / 180);
     
+    // Ensure text is visible on smaller slices
+    if (percent < 0.05 && !isExpanded) return null;
+
     return (
       <text 
         x={x} 
@@ -114,7 +122,7 @@ const Analytics: React.FC = () => {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={8} // Ensure this font size is applied for labels within pie slices
+        fontSize={isExpanded ? 14 : 10} // Larger font for expanded, adjusted for main view
       >
         {`${name}: ${(percent * 100).toFixed(0)}%`}
       </text>
@@ -141,38 +149,38 @@ const Analytics: React.FC = () => {
           {/* Frequently Asked Questions */}
           <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-[0.65rem] font-medium">Frequently Asked Questions</h3>
+              <h3 className="text-foreground text-sm font-medium">Frequently Asked Questions</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-4 w-4 hover:text-appGreen"
+                className="h-6 w-6 hover:text-appGreen" // Increased button size
                 onClick={() => handleExpandChart('frequent')}
               >
-                <Maximize2 size={10} />
+                <Maximize2 size={14} /> {/* Increased icon size */}
               </Button>
             </div>
-            <div className="h-[18vh]">
+            <div className="h-[25vh]"> {/* Increased height */}
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyFrequentQuestions}
-                  margin={{ top: 2, right: 10, left: -20, bottom: 0 }} // Adjusted margins
+                  margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={8} />
-                  <YAxis stroke="var(--app-text)" fontSize={8} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
+                  <YAxis stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
-                    itemStyle={{ fontSize: '8px' }}
-                    labelStyle={{ fontSize: '8px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                    itemStyle={{ fontSize: '10px' }}
+                    labelStyle={{ fontSize: '10px' }}
                   />
-                  <Legend wrapperStyle={{fontSize: '8px'}} />
+                  <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
                   <Line 
                     type="monotone" 
                     dataKey="frequency" 
                     name="Frequency"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 3 }} // Slightly larger active dot
-                    strokeWidth={1.5} // Slightly thicker line
+                    activeDot={{ r: 4 }} 
+                    strokeWidth={2} 
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -182,38 +190,38 @@ const Analytics: React.FC = () => {
           {/* Line Graph of Scores */}
           <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-[0.65rem] font-medium">Score by Question</h3>
+              <h3 className="text-foreground text-sm font-medium">Score by Question</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-4 w-4 hover:text-appGreen"
+                className="h-6 w-6 hover:text-appGreen" // Increased button size
                 onClick={() => handleExpandChart('scores')}
               >
-                <Maximize2 size={10} />
+                <Maximize2 size={14} /> {/* Increased icon size */}
               </Button>
             </div>
-            <div className="h-[18vh]">
+            <div className="h-[25vh]"> {/* Increased height */}
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyScoresByQuestion}
-                  margin={{ top: 2, right: 10, left: -20, bottom: 0 }} // Adjusted margins
+                  margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={8} />
-                  <YAxis stroke="var(--app-text)" fontSize={8} domain={[0, 100]} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
+                  <YAxis stroke="var(--app-text)" fontSize={10} domain={[0, 100]} /> {/* Increased font size */}
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
-                    itemStyle={{ fontSize: '8px' }}
-                    labelStyle={{ fontSize: '8px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                    itemStyle={{ fontSize: '10px' }}
+                    labelStyle={{ fontSize: '10px' }}
                   />
-                  <Legend wrapperStyle={{fontSize: '8px'}} />
+                  <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
                   <Line 
                     type="monotone" 
                     dataKey="score" 
                     name="Average Score"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 3 }} // Slightly larger active dot
-                    strokeWidth={1.5} // Slightly thicker line
+                    activeDot={{ r: 4 }} 
+                    strokeWidth={2} 
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -223,46 +231,45 @@ const Analytics: React.FC = () => {
           {/* Score Distribution Pie Chart */}
           <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-[0.65rem] font-medium">Overall Score Distribution</h3>
+              <h3 className="text-foreground text-sm font-medium">Overall Score Distribution</h3>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-4 w-4 hover:text-appGreen"
+                className="h-6 w-6 hover:text-appGreen" // Increased button size
                 onClick={() => handleExpandChart('distribution')}
               >
-                <Maximize2 size={10} />
+                <Maximize2 size={14} /> {/* Increased icon size */}
               </Button>
             </div>
-            <div className="h-[18vh]">
+            <div className="h-[25vh]"> {/* Increased height */}
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
                   <Pie
                     data={dummyScoreDistribution}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={45} // Increased outerRadius
+                    outerRadius={70} // Increased outerRadius
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={renderCustomizedLabel}
-                    fontSize={8} // Increased font size for Pie component context
                   >
                     {dummyScoreDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
-                    itemStyle={{ fontSize: '8px' }}
-                    labelStyle={{ fontSize: '8px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                    itemStyle={{ fontSize: '10px' }}
+                    labelStyle={{ fontSize: '10px' }}
                   />
                   <Legend 
-                    wrapperStyle={{fontSize: '8px'}} // Increased legend font size
+                    wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center" 
-                    iconSize={8} // Increased icon size
+                    iconSize={10} 
                     iconType="circle"
                   />
                 </PieChart>
@@ -273,61 +280,60 @@ const Analytics: React.FC = () => {
           {/* Dynamic Score Pie Chart */}
           <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
             <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-[0.65rem] font-medium">Question-Specific Scores</h3>
+              <h3 className="text-foreground text-sm font-medium">Question-Specific Scores</h3>
               <div className="flex items-center">
                 <Select 
                   value={selectedQuestion} 
                   onValueChange={setSelectedQuestion}
                 >
-                  <SelectTrigger className="w-[50px] h-4 bg-appDark border-appBorder focus:ring-appGreen text-[0.6rem] mr-1 px-1.5">
+                  <SelectTrigger className="w-[60px] h-6 bg-appDark border-appBorder focus:ring-appGreen text-xs mr-1 px-2"> {/* Adjusted size & font */}
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent className="bg-appBlue border-appBorder">
                     {dummyQuestionOptions.map((q) => (
-                      <SelectItem key={q.id} value={q.id} className="text-[0.6rem]">{q.name}</SelectItem>
+                      <SelectItem key={q.id} value={q.id} className="text-xs">{q.name}</SelectItem> 
                     ))}
                   </SelectContent>
                 </Select>
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-4 w-4 hover:text-appGreen"
+                  className="h-6 w-6 hover:text-appGreen" // Increased button size
                   onClick={() => handleExpandChart('question')}
                 >
-                  <Maximize2 size={10} />
+                  <Maximize2 size={14} /> {/* Increased icon size */}
                 </Button>
               </div>
             </div>
-            <div className="h-[18vh]">
+            <div className="h-[25vh]"> {/* Increased height */}
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
                   <Pie
                     data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={45} // Increased outerRadius
+                    outerRadius={70} // Increased outerRadius
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={renderCustomizedLabel}
-                    fontSize={8} // Increased font size for Pie component context
                   >
                     {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
-                    itemStyle={{ fontSize: '8px' }}
-                    labelStyle={{ fontSize: '8px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                    itemStyle={{ fontSize: '10px' }}
+                    labelStyle={{ fontSize: '10px' }}
                   />
                   <Legend 
-                    wrapperStyle={{fontSize: '8px'}} // Increased legend font size
+                    wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center" 
-                    iconSize={8} // Increased icon size
+                    iconSize={10} 
                     iconType="circle"
                   />
                 </PieChart>
@@ -356,11 +362,11 @@ const Analytics: React.FC = () => {
                   margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" />
-                  <YAxis stroke="var(--app-text)" />
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} />
-                  <Legend />
-                  <Line type="monotone" dataKey="frequency" name="Frequency" stroke="var(--app-green)" activeDot={{ r: 8 }} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={12} />
+                  <YAxis stroke="var(--app-text)" fontSize={12} />
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '12px' }} itemStyle={{fontSize: '12px'}} labelStyle={{fontSize: '12px'}} />
+                  <Legend wrapperStyle={{fontSize: '12px'}}/>
+                  <Line type="monotone" dataKey="frequency" name="Frequency" stroke="var(--app-green)" activeDot={{ r: 8 }} strokeWidth={2}/>
                 </LineChart>
               </ResponsiveContainer>
             )}
@@ -372,11 +378,11 @@ const Analytics: React.FC = () => {
                   margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" />
-                  <YAxis stroke="var(--app-text)" domain={[0, 100]} />
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} />
-                  <Legend />
-                  <Line type="monotone" dataKey="score" name="Average Score" stroke="var(--app-green)" activeDot={{ r: 8 }} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={12}/>
+                  <YAxis stroke="var(--app-text)" domain={[0, 100]} fontSize={12}/>
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '12px' }} itemStyle={{fontSize: '12px'}} labelStyle={{fontSize: '12px'}} />
+                  <Legend wrapperStyle={{fontSize: '12px'}}/>
+                  <Line type="monotone" dataKey="score" name="Average Score" stroke="var(--app-green)" activeDot={{ r: 8 }} strokeWidth={2}/>
                 </LineChart>
               </ResponsiveContainer>
             )}
@@ -389,19 +395,18 @@ const Analytics: React.FC = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={180}
+                    outerRadius={180} // Kept large for expanded view
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    fontSize={14}
+                    label={renderCustomizedLabel} // Uses the updated renderCustomizedLabel
                   >
                     {dummyScoreDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} />
-                  <Legend />
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '12px' }} itemStyle={{fontSize: '12px'}} labelStyle={{fontSize: '12px'}} />
+                  <Legend wrapperStyle={{fontSize: '12px'}}/>
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -414,19 +419,18 @@ const Analytics: React.FC = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={180}
+                    outerRadius={180} // Kept large for expanded view
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    fontSize={14}
+                    label={renderCustomizedLabel} // Uses the updated renderCustomizedLabel
                   >
                     {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)' }} />
-                  <Legend />
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '12px' }} itemStyle={{fontSize: '12px'}} labelStyle={{fontSize: '12px'}} />
+                  <Legend wrapperStyle={{fontSize: '12px'}}/>
                 </PieChart>
               </ResponsiveContainer>
             )}
