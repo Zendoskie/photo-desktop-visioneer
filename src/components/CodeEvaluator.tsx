@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle, Mic, Settings, Code } from 'lucide-react';
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle, Mic, Settings, Code, Check } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
