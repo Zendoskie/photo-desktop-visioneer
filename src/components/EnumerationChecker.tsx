@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle, Mic } from 'lucide-react';
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle, Mic, Check } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
@@ -142,14 +142,14 @@ const EnumerationChecker: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full w-full overflow-hidden">
-      <div className="flex justify-between gap-2 md:hidden p-2 bg-appBlue border-b border-appBorder">
+    <div className="flex flex-col md:flex-row h-full w-full overflow-hidden p-4 gap-4 bg-background">
+      <div className="flex justify-between gap-2 md:hidden pb-2 border-b border-appBorder">
         <div className="flex">
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={toggleLeftPanel}
-            className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+            className={`${showLeftPanel ? 'bg-muted text-primary' : 'text-muted-foreground'} hover:bg-muted`}
           >
             <PanelLeft size={16} className="mr-1" />
             Input
@@ -158,7 +158,7 @@ const EnumerationChecker: React.FC = () => {
             variant="ghost" 
             size="sm" 
             onClick={toggleRightPanel}
-            className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}
+            className={`${showRightPanel ? 'bg-muted text-primary' : 'text-muted-foreground'} hover:bg-muted`}
           >
             Results
             <PanelRight size={16} className="ml-1" />
@@ -167,253 +167,262 @@ const EnumerationChecker: React.FC = () => {
         <ThemeToggle />
       </div>
 
-      <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex flex-col ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} border-r border-appBorder p-4`}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <div className="w-2 h-2 bg-red-500 rounded-full mr-1.5"></div>
-            <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1.5"></div>
-            <div className="w-2 h-2 bg-green-500 rounded-full mr-1.5"></div>
-            <span className="text-appText text-sm font-medium ml-2">Input Console</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
-                  <HelpCircle size={16} className="mr-1" />
-                  How to Use
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="bg-appBlue border-appBorder">
-                <SheetHeader>
-                  <SheetTitle className="text-appGreen">How to Use Enumeration Checker</SheetTitle>
-                  <SheetDescription className="text-foreground">
-                    <div className="space-y-4 mt-4">
-                      <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Expected Answer</h3>
-                        <p>Type the expected answer that will be used to check the submitted answer.</p>
-                      </div>
-                      <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Input Your Question</h3>
-                        <p>Type your enumeration question in the Question field.</p>
-                      </div>
-                      <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Provide Answer</h3>
-                        <p>Type your answer or solution in the Answer field.</p>
-                      </div>
-                      <div>
-                        <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Check</h3>
-                        <p>Click the Check button to verify if the answer matches the expected answer.</p>
-                      </div>
-                      <div className="pt-4 border-t border-appBorder mt-4">
-                        <p className="text-appGreen">Keyboard Shortcuts:</p>
-                        <p>Press Ctrl+Enter to quickly check your answer.</p>
-                      </div>
-                    </div>
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-            <div className="hidden md:block">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex flex-col flex-grow">
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-appText text-xs font-medium">Expected Answer</label>
+      {/* Left Panel - Input Console */}
+      <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex flex-col ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
+        <Card className="flex flex-col flex-grow bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <div className="flex items-center">
-              <Label htmlFor="show-expected" className="mr-2 text-xs">
-                {showExpectedAnswer ? "Hide" : "Show"}
-              </Label>
-              <Switch 
-                id="show-expected" 
-                checked={showExpectedAnswer} 
-                onCheckedChange={setShowExpectedAnswer}
-              />
+              <div className="w-2.5 h-2.5 bg-red-500 rounded-full mr-1.5"></div>
+              <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full mr-1.5"></div>
+              <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5"></div>
+              <CardTitle className="text-sm font-medium ml-1 text-card-foreground">Input Console</CardTitle>
             </div>
-          </div>
-          <div className="relative mb-4">
-            <Textarea 
-              placeholder="Enter the expected answer..."
-              className="flex-none h-16 bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
-              value={expectedAnswer}
-              onChange={(e) => setExpectedAnswer(e.target.value)}
-              style={{ 
-                color: showExpectedAnswer ? "inherit" : "transparent", 
-                textShadow: showExpectedAnswer ? "none" : "0 0 5px rgba(0,0,0,0.5)" 
-              }}
-            />
-            <div className="absolute right-2 top-2 flex gap-1">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => startSpeechRecognition('expectedAnswer')}
-                className={`text-appText ${activeField === 'expectedAnswer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
-              >
-                <Mic size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleTextToSpeech(expectedAnswer)}
-                className="text-appText hover:text-appGreen"
-              >
-                <Volume2 size={16} />
-              </Button>
+            <div className="flex items-center gap-1">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary px-2">
+                    <HelpCircle size={16} />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="bg-card border-border">
+                  <SheetHeader>
+                    <SheetTitle className="text-primary">How to Use Enumeration Checker</SheetTitle>
+                    <SheetDescription className="text-card-foreground/80">
+                      <div className="space-y-4 mt-4">
+                        <div>
+                          <h3 className="text-primary text-base font-medium mb-1">Step 1: Input Expected Answer</h3>
+                          <p>Type the expected answer that will be used to check the submitted answer.</p>
+                        </div>
+                        <div>
+                          <h3 className="text-primary text-base font-medium mb-1">Step 2: Input Your Question</h3>
+                          <p>Type your enumeration question in the Question field.</p>
+                        </div>
+                        <div>
+                          <h3 className="text-primary text-base font-medium mb-1">Step 3: Provide Answer</h3>
+                          <p>Type your answer or solution in the Answer field.</p>
+                        </div>
+                        <div>
+                          <h3 className="text-primary text-base font-medium mb-1">Step 4: Check</h3>
+                          <p>Click the Check button to verify if the answer matches the expected answer.</p>
+                        </div>
+                        <div className="pt-4 border-t border-border mt-4">
+                          <p className="text-primary">Keyboard Shortcuts:</p>
+                          <p>Press Ctrl+Enter to quickly check your answer.</p>
+                        </div>
+                      </div>
+                    </SheetDescription>
+                  </SheetHeader>
+                </SheetContent>
+              </Sheet>
+              <div className="hidden md:block">
+                <ThemeToggle />
+              </div>
             </div>
-          </div>
+          </CardHeader>
           
-          <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Question</label>
-          </div>
-          <div className="relative mb-4">
-            <Textarea 
-              placeholder="Enter your enumeration question..."
-              className="flex-none h-24 bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <div className="absolute right-2 top-2 flex gap-1">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => startSpeechRecognition('question')}
-                className={`text-appText ${activeField === 'question' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
-              >
-                <Mic size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleTextToSpeech(question)}
-                className="text-appText hover:text-appGreen"
-              >
-                <Volume2 size={16} />
-              </Button>
+          <CardContent className="flex flex-col flex-grow p-4 space-y-4">
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <Label htmlFor="expectedAnswer" className="text-xs font-medium text-muted-foreground">Expected Answer</Label>
+                <div className="flex items-center">
+                  <Label htmlFor="show-expected" className="mr-2 text-xs text-muted-foreground">
+                    {showExpectedAnswer ? "Hide" : "Show"}
+                  </Label>
+                  <Switch 
+                    id="show-expected" 
+                    checked={showExpectedAnswer} 
+                    onCheckedChange={setShowExpectedAnswer}
+                    className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+                  />
+                </div>
+              </div>
+              <div className="relative">
+                <Textarea 
+                  id="expectedAnswer"
+                  placeholder="Enter the expected answer..."
+                  className="flex-none h-20 bg-background text-foreground text-sm border-input resize-none focus:ring-primary focus:border-primary transition-all duration-300"
+                  value={expectedAnswer}
+                  onChange={(e) => setExpectedAnswer(e.target.value)}
+                  style={{ 
+                    color: showExpectedAnswer ? "inherit" : "transparent", 
+                    textShadow: showExpectedAnswer ? "none" : "0 0 8px rgba(128,128,128,0.5)" 
+                  }}
+                />
+                <div className="absolute right-2 top-2 flex gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => startSpeechRecognition('expectedAnswer')}
+                    className={`h-7 w-7 text-muted-foreground ${activeField === 'expectedAnswer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-primary'}`}
+                  >
+                    <Mic size={16} />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleTextToSpeech(expectedAnswer)}
+                    className="h-7 w-7 text-muted-foreground hover:text-primary"
+                  >
+                    <Volume2 size={16} />
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Answer</label>
-          </div>
-          <div className="relative mb-4 flex-grow">
-            <Textarea 
-              placeholder="Enter your answer..."
-              className="h-full w-full bg-appBlue text-foreground text-sm border-appBorder resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-            />
-            <div className="absolute right-2 top-2 flex gap-1">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => startSpeechRecognition('answer')}
-                className={`text-appText ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}
-              >
-                <Mic size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => handleTextToSpeech(answer)}
-                className="text-appText hover:text-appGreen"
-              >
-                <Volume2 size={16} />
-              </Button>
+            
+            <div>
+              <Label htmlFor="question" className="text-xs font-medium text-muted-foreground mb-1 block">Question</Label>
+              <div className="relative">
+                <Textarea 
+                  id="question"
+                  placeholder="Enter your enumeration question..."
+                  className="flex-none h-28 bg-background text-foreground text-sm border-input resize-none focus:ring-primary focus:border-primary transition-all duration-300"
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <div className="absolute right-2 top-2 flex gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => startSpeechRecognition('question')}
+                    className={`h-7 w-7 text-muted-foreground ${activeField === 'question' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-primary'}`}
+                  >
+                    <Mic size={16} />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleTextToSpeech(question)}
+                    className="h-7 w-7 text-muted-foreground hover:text-primary"
+                  >
+                    <Volume2 size={16} />
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          <div className="flex gap-2 mt-auto">
+            
+            <div className="flex-grow flex flex-col">
+              <Label htmlFor="answer" className="text-xs font-medium text-muted-foreground mb-1 block">Answer</Label>
+              <div className="relative flex-grow">
+                <Textarea 
+                  id="answer"
+                  placeholder="Enter your answer..."
+                  className="h-full w-full bg-background text-foreground text-sm border-input resize-none focus:ring-primary focus:border-primary transition-all duration-300"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                />
+                <div className="absolute right-2 top-2 flex gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => startSpeechRecognition('answer')}
+                    className={`h-7 w-7 text-muted-foreground ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-primary'}`}
+                  >
+                    <Mic size={16} />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleTextToSpeech(answer)}
+                    className="h-7 w-7 text-muted-foreground hover:text-primary"
+                  >
+                    <Volume2 size={16} />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 border-t border-border">
             <Button 
               onClick={handleClear}
-              className="app-button flex-1 bg-appBlue hover:bg-opacity-80 border border-appBorder text-appText hover:text-appGreen transition-colors duration-300 flex items-center justify-center gap-2"
+              variant="outline"
+              className="flex-1"
             >
-              <X size={16} />
+              <X size={16} className="mr-2" />
               Clear
             </Button>
             <Button 
               onClick={handleSubmit}
-              className="app-button flex-1 bg-appBlue hover:bg-opacity-80 border border-appBorder text-appGreen transition-colors duration-300 flex items-center justify-center gap-2"
+              className="flex-1 ml-2 bg-primary text-primary-foreground hover:bg-primary/90"
             >
-              <span className="text-appGreen">✓</span> Check
+              <Check size={16} className="mr-2" />
+              Check
             </Button>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
       
-      <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex flex-col ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'} p-4`}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <div className="w-2 h-2 bg-appGreen rounded-full mr-1.5 opacity-70"></div>
-            <span className="text-appText text-sm font-medium ml-2">Check Results</span>
-          </div>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => navigate('/ai-chat')}
-            className="text-appText hover:text-appGreen"
-          >
-            <MessageCircle size={16} className="mr-1" />
-            AI Chat
-          </Button>
-        </div>
-        
-        <div className="mb-4">
-          <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Score</label>
-          </div>
-          <div className="bg-appBlue border border-appBorder p-3 rounded-md">
-            {submitted ? (
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between">
-                  <span className="text-foreground text-sm">Correct:</span>
-                  <span className="text-appGreen font-mono">{score.correct}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-foreground text-sm">Wrong:</span>
-                  <span className="text-destructive font-mono">{score.wrong}</span>
-                </div>
-                <div className="flex justify-between border-t border-appBorder pt-2 mt-2">
-                  <span className="text-foreground text-sm font-medium">Total Score:</span>
-                  <span className="text-foreground font-mono font-medium">{score.correct}/{score.total}</span>
-                </div>
+      {/* Right Panel - Check Results */}
+      <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex flex-col ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
+        <Card className="flex flex-col flex-grow bg-card">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <div className="flex items-center">
+               <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-1.5 opacity-70"></div>
+              <CardTitle className="text-sm font-medium ml-1 text-card-foreground">Check Results</CardTitle>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/ai-chat')}
+              className="text-muted-foreground hover:text-primary px-2"
+            >
+              <MessageCircle size={16} className="mr-1" />
+              AI Chat
+            </Button>
+          </CardHeader>
+          
+          <CardContent className="p-4 space-y-4 flex-grow flex flex-col">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Score</Label>
+              <div className="bg-background border border-input p-3 rounded-md">
+                {submitted ? (
+                  <div className="flex flex-col gap-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-foreground">Correct:</span>
+                      <span className="text-green-500 font-mono">{score.correct}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-foreground">Wrong:</span>
+                      <span className="text-red-500 font-mono">{score.wrong}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-input pt-2 mt-2">
+                      <span className="text-foreground font-medium">Total Score:</span>
+                      <span className="text-foreground font-mono font-medium">{score.correct}/{score.total}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground text-sm">Not checked yet</span>
+                )}
               </div>
-            ) : (
-              <span className="text-foreground text-sm">Not checked yet</span>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex-grow">
-          <div className="mb-1">
-            <label className="text-appText text-xs font-medium">Results</label>
-          </div>
-          <div className="bg-appBlue border border-appBorder p-3 rounded-md h-full overflow-y-auto">
-            {submitted ? (
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-appGreen text-sm font-medium mb-1">Expected Answer:</h3>
-                  <p className="text-foreground text-sm bg-appBlue/50 p-2 rounded">{expectedAnswer}</p>
-                </div>
-                <div>
-                  <h3 className="text-appGreen text-sm font-medium mb-1">Your Answer:</h3>
-                  <p className="text-foreground text-sm bg-appBlue/50 p-2 rounded">{answer}</p>
-                </div>
-                <div>
-                  <h3 className="text-appGreen text-sm font-medium mb-1">Assessment:</h3>
-                  <p className={`text-sm p-2 rounded ${score.correct > 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                    {score.correct > 0 ? '✓ Correct Answer' : '✗ Incorrect Answer'}
-                  </p>
-                </div>
+            </div>
+            
+            <div className="flex-grow flex flex-col">
+              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Details</Label>
+              <div className="bg-background border border-input p-3 rounded-md h-full overflow-y-auto text-sm">
+                {submitted ? (
+                  <div className="space-y-3">
+                    <div>
+                      <h3 className="text-primary text-xs font-semibold mb-1">EXPECTED ANSWER:</h3>
+                      <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{expectedAnswer || "N/A"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-primary text-xs font-semibold mb-1">YOUR ANSWER:</h3>
+                      <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{answer || "N/A"}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-primary text-xs font-semibold mb-1">ASSESSMENT:</h3>
+                      <p className={`text-xs p-2 rounded font-medium ${score.correct > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+                        {score.correct > 0 ? '✓ CORRECT ANSWER' : '✗ INCORRECT ANSWER'}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <span className="text-muted-foreground text-sm">Submit your answer to see detailed results.</span>
+                )}
               </div>
-            ) : (
-              <span className="text-foreground text-sm">Submit your answer to see results</span>
-            )}
-          </div>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
