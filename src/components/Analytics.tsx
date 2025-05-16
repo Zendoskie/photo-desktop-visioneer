@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   CartesianGrid, 
@@ -115,7 +114,7 @@ const Analytics: React.FC = () => {
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        fontSize={8}
+        fontSize={8} // Ensure this font size is applied for labels within pie slices
       >
         {`${name}: ${(percent * 100).toFixed(0)}%`}
       </text>
@@ -156,24 +155,24 @@ const Analytics: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyFrequentQuestions}
-                  margin={{ top: 2, right: 2, left: -15, bottom: 0 }}
+                  margin={{ top: 2, right: 10, left: -20, bottom: 0 }} // Adjusted margins
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={6} />
-                  <YAxis stroke="var(--app-text)" fontSize={6} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={8} />
+                  <YAxis stroke="var(--app-text)" fontSize={8} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '6px' }} 
-                    itemStyle={{ fontSize: '6px' }}
-                    labelStyle={{ fontSize: '6px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
+                    itemStyle={{ fontSize: '8px' }}
+                    labelStyle={{ fontSize: '8px' }}
                   />
-                  <Legend wrapperStyle={{fontSize: '6px'}} />
+                  <Legend wrapperStyle={{fontSize: '8px'}} />
                   <Line 
                     type="monotone" 
                     dataKey="frequency" 
                     name="Frequency"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 2 }} 
-                    strokeWidth={1}
+                    activeDot={{ r: 3 }} // Slightly larger active dot
+                    strokeWidth={1.5} // Slightly thicker line
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -197,24 +196,24 @@ const Analytics: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={dummyScoresByQuestion}
-                  margin={{ top: 2, right: 2, left: -15, bottom: 0 }}
+                  margin={{ top: 2, right: 10, left: -20, bottom: 0 }} // Adjusted margins
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={6} />
-                  <YAxis stroke="var(--app-text)" fontSize={6} domain={[0, 100]} />
+                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={8} />
+                  <YAxis stroke="var(--app-text)" fontSize={8} domain={[0, 100]} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '6px' }} 
-                    itemStyle={{ fontSize: '6px' }}
-                    labelStyle={{ fontSize: '6px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
+                    itemStyle={{ fontSize: '8px' }}
+                    labelStyle={{ fontSize: '8px' }}
                   />
-                  <Legend wrapperStyle={{fontSize: '6px'}} />
+                  <Legend wrapperStyle={{fontSize: '8px'}} />
                   <Line 
                     type="monotone" 
                     dataKey="score" 
                     name="Average Score"
                     stroke="var(--app-green)" 
-                    activeDot={{ r: 2 }} 
-                    strokeWidth={1}
+                    activeDot={{ r: 3 }} // Slightly larger active dot
+                    strokeWidth={1.5} // Slightly thicker line
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -242,28 +241,28 @@ const Analytics: React.FC = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={35}
+                    outerRadius={45} // Increased outerRadius
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={renderCustomizedLabel}
-                    fontSize={6}
+                    fontSize={8} // Increased font size for Pie component context
                   >
                     {dummyScoreDistribution.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '6px' }} 
-                    itemStyle={{ fontSize: '6px' }}
-                    labelStyle={{ fontSize: '6px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
+                    itemStyle={{ fontSize: '8px' }}
+                    labelStyle={{ fontSize: '8px' }}
                   />
                   <Legend 
-                    wrapperStyle={{fontSize: '6px'}} 
+                    wrapperStyle={{fontSize: '8px'}} // Increased legend font size
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center" 
-                    iconSize={6}
+                    iconSize={8} // Increased icon size
                     iconType="circle"
                   />
                 </PieChart>
@@ -307,28 +306,28 @@ const Analytics: React.FC = () => {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={35}
+                    outerRadius={45} // Increased outerRadius
                     fill="#8884d8"
                     dataKey="value"
                     nameKey="name"
                     label={renderCustomizedLabel}
-                    fontSize={6}
+                    fontSize={8} // Increased font size for Pie component context
                   >
                     {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '6px' }} 
-                    itemStyle={{ fontSize: '6px' }}
-                    labelStyle={{ fontSize: '6px' }}
+                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '8px' }} 
+                    itemStyle={{ fontSize: '8px' }}
+                    labelStyle={{ fontSize: '8px' }}
                   />
                   <Legend 
-                    wrapperStyle={{fontSize: '6px'}} 
+                    wrapperStyle={{fontSize: '8px'}} // Increased legend font size
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center" 
-                    iconSize={6}
+                    iconSize={8} // Increased icon size
                     iconType="circle"
                   />
                 </PieChart>
