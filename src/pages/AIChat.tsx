@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Send } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Link } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AIChat: React.FC = () => {
   const [message, setMessage] = React.useState('');
@@ -37,54 +38,56 @@ const AIChat: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-appDark">
-      <div className="flex justify-between items-center p-4 border-b border-appBorder bg-appBlue">
-        <div className="flex items-center">
-          <Link to="/evaluate">
-            <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen mr-2">
-              <ArrowLeft size={16} className="mr-1" />
-              Back
-            </Button>
-          </Link>
-          <h1 className="text-lg font-medium text-foreground">AI Evaluator Chat</h1>
-        </div>
-        <ThemeToggle />
-      </div>
-
-      <div className="flex-grow overflow-y-auto p-4 space-y-4">
-        {chatHistory.map((msg, index) => (
-          <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div 
-              className={`max-w-[80%] p-3 rounded-lg ${
-                msg.role === 'user' 
-                  ? 'bg-appGreen text-foreground ml-auto' 
-                  : 'bg-appBlue text-foreground'
-              }`}
-            >
-              {msg.content}
-            </div>
+    <div className="flex flex-col h-screen w-full bg-appDark p-4">
+      <Card className="flex flex-col flex-grow w-full bg-appBlue border-appBorder shadow-lg rounded-lg overflow-hidden">
+        <CardHeader className="flex flex-row justify-between items-center p-4 border-b border-appBorder">
+          <div className="flex items-center">
+            <Link to="/evaluate">
+              <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen mr-2">
+                <ArrowLeft size={16} className="mr-1" />
+                Back
+              </Button>
+            </Link>
+            <CardTitle className="text-lg font-medium text-foreground">AI Evaluator Chat</CardTitle>
           </div>
-        ))}
-      </div>
+          <ThemeToggle />
+        </CardHeader>
 
-      <div className="p-4 border-t border-appBorder bg-appBlue">
-        <div className="flex gap-2">
-          <Textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
-            className="flex-grow bg-appDark text-foreground border-appBorder resize-none"
-            rows={2}
-          />
-          <Button 
-            onClick={handleSendMessage}
-            className="app-button bg-appBlue hover:bg-opacity-80 border border-appBorder text-appGreen h-auto"
-          >
-            <Send size={18} />
-          </Button>
+        <CardContent className="flex-grow overflow-y-auto p-4 space-y-4 bg-appDark">
+          {chatHistory.map((msg, index) => (
+            <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div 
+                className={`max-w-[80%] p-3 rounded-lg shadow-md ${
+                  msg.role === 'user' 
+                    ? 'bg-appGreen text-primary-foreground ml-auto' 
+                    : 'bg-appBlue text-foreground'
+                }`}
+              >
+                {msg.content}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+
+        <div className="p-4 border-t border-appBorder bg-appBlue">
+          <div className="flex gap-2">
+            <Textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your message..."
+              className="flex-grow bg-appDark text-foreground border-appBorder resize-none focus:ring-appGreen focus:border-appGreen"
+              rows={2}
+            />
+            <Button 
+              onClick={handleSendMessage}
+              className="app-button bg-appBlue hover:bg-opacity-80 border border-appBorder text-appGreen h-auto"
+            >
+              <Send size={18} />
+            </Button>
+          </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
