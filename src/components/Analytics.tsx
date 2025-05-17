@@ -17,6 +17,8 @@ import { MessageCircle, Maximize2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 // Sample data - would be replaced with actual data from a backend
 const dummyFrequentQuestions = [
@@ -147,140 +149,146 @@ const Analytics: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
           {/* Frequently Asked Questions */}
-          <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
-            <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Frequently Asked Questions</h3>
+          <Card className={cn("bg-appBlue border-appBorder")}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">Frequently Asked Questions</CardTitle>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-6 w-6 hover:text-appGreen" // Increased button size
+                className="h-6 w-6 hover:text-appGreen"
                 onClick={() => handleExpandChart('frequent')}
               >
-                <Maximize2 size={14} /> {/* Increased icon size */}
+                <Maximize2 size={14} />
               </Button>
-            </div>
-            <div className="h-[25vh]"> {/* Increased height */}
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={dummyFrequentQuestions}
-                  margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
-                  <YAxis stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
-                    itemStyle={{ fontSize: '10px' }}
-                    labelStyle={{ fontSize: '10px' }}
-                  />
-                  <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
-                  <Line 
-                    type="monotone" 
-                    dataKey="frequency" 
-                    name="Frequency"
-                    stroke="var(--app-green)" 
-                    activeDot={{ r: 4 }} 
-                    strokeWidth={2} 
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[25vh] p-1"> {/* Increased height */}
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={dummyFrequentQuestions}
+                    margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
+                    <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
+                    <YAxis stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                      itemStyle={{ fontSize: '10px' }}
+                      labelStyle={{ fontSize: '10px' }}
+                    />
+                    <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
+                    <Line 
+                      type="monotone" 
+                      dataKey="frequency" 
+                      name="Frequency"
+                      stroke="var(--app-green)" 
+                      activeDot={{ r: 4 }} 
+                      strokeWidth={2} 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Line Graph of Scores */}
-          <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
-            <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Score by Question</h3>
+          <Card className={cn("bg-appBlue border-appBorder")}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">Score by Question</CardTitle>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-6 w-6 hover:text-appGreen" // Increased button size
+                className="h-6 w-6 hover:text-appGreen"
                 onClick={() => handleExpandChart('scores')}
               >
-                <Maximize2 size={14} /> {/* Increased icon size */}
+                <Maximize2 size={14} />
               </Button>
-            </div>
-            <div className="h-[25vh]"> {/* Increased height */}
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={dummyScoresByQuestion}
-                  margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
-                  <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
-                  <YAxis stroke="var(--app-text)" fontSize={10} domain={[0, 100]} /> {/* Increased font size */}
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
-                    itemStyle={{ fontSize: '10px' }}
-                    labelStyle={{ fontSize: '10px' }}
-                  />
-                  <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
-                  <Line 
-                    type="monotone" 
-                    dataKey="score" 
-                    name="Average Score"
-                    stroke="var(--app-green)" 
-                    activeDot={{ r: 4 }} 
-                    strokeWidth={2} 
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[25vh] p-1"> {/* Increased height */}
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={dummyScoresByQuestion}
+                    margin={{ top: 5, right: 20, left: -10, bottom: 5 }} // Adjusted margins
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--app-border)" />
+                    <XAxis dataKey="name" stroke="var(--app-text)" fontSize={10} /> {/* Increased font size */}
+                    <YAxis stroke="var(--app-text)" fontSize={10} domain={[0, 100]} /> {/* Increased font size */}
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                      itemStyle={{ fontSize: '10px' }}
+                      labelStyle={{ fontSize: '10px' }}
+                    />
+                    <Legend wrapperStyle={{fontSize: '10px'}} /> {/* Increased font size */}
+                    <Line 
+                      type="monotone" 
+                      dataKey="score" 
+                      name="Average Score"
+                      stroke="var(--app-green)" 
+                      activeDot={{ r: 4 }} 
+                      strokeWidth={2} 
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Score Distribution Pie Chart */}
-          <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
-            <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Overall Score Distribution</h3>
+          <Card className={cn("bg-appBlue border-appBorder")}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">Overall Score Distribution</CardTitle>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-6 w-6 hover:text-appGreen" // Increased button size
+                className="h-6 w-6 hover:text-appGreen"
                 onClick={() => handleExpandChart('distribution')}
               >
-                <Maximize2 size={14} /> {/* Increased icon size */}
+                <Maximize2 size={14} />
               </Button>
-            </div>
-            <div className="h-[25vh]"> {/* Increased height */}
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
-                  <Pie
-                    data={dummyScoreDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={70} // Increased outerRadius
-                    fill="#8884d8"
-                    dataKey="value"
-                    nameKey="name"
-                    label={renderCustomizedLabel}
-                  >
-                    {dummyScoreDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
-                    itemStyle={{ fontSize: '10px' }}
-                    labelStyle={{ fontSize: '10px' }}
-                  />
-                  <Legend 
-                    wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
-                    layout="horizontal" 
-                    verticalAlign="bottom" 
-                    align="center" 
-                    iconSize={10} 
-                    iconType="circle"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[25vh] p-1"> {/* Increased height */}
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
+                    <Pie
+                      data={dummyScoreDistribution}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={70} // Increased outerRadius
+                      fill="#8884d8"
+                      dataKey="value"
+                      nameKey="name"
+                      label={renderCustomizedLabel}
+                    >
+                      {dummyScoreDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                      itemStyle={{ fontSize: '10px' }}
+                      labelStyle={{ fontSize: '10px' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
+                      layout="horizontal" 
+                      verticalAlign="bottom" 
+                      align="center" 
+                      iconSize={10} 
+                      iconType="circle"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Dynamic Score Pie Chart */}
-          <div className="bg-appBlue p-1 rounded-lg border border-appBorder relative">
-            <div className="flex justify-between items-center">
-              <h3 className="text-foreground text-sm font-medium">Question-Specific Scores</h3>
+          <Card className={cn("bg-appBlue border-appBorder")}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-foreground">Question-Specific Scores</CardTitle>
               <div className="flex items-center">
                 <Select 
                   value={selectedQuestion} 
@@ -298,48 +306,50 @@ const Analytics: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="h-6 w-6 hover:text-appGreen" // Increased button size
+                  className="h-6 w-6 hover:text-appGreen"
                   onClick={() => handleExpandChart('question')}
                 >
-                  <Maximize2 size={14} /> {/* Increased icon size */}
+                  <Maximize2 size={14} />
                 </Button>
               </div>
-            </div>
-            <div className="h-[25vh]"> {/* Increased height */}
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
-                  <Pie
-                    data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={70} // Increased outerRadius
-                    fill="#8884d8"
-                    dataKey="value"
-                    nameKey="name"
-                    label={renderCustomizedLabel}
-                  >
-                    {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
-                    itemStyle={{ fontSize: '10px' }}
-                    labelStyle={{ fontSize: '10px' }}
-                  />
-                  <Legend 
-                    wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
-                    layout="horizontal" 
-                    verticalAlign="bottom" 
-                    align="center" 
-                    iconSize={10} 
-                    iconType="circle"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[25vh] p-1"> {/* Increased height */}
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 20 }}> {/* Adjusted bottom margin for legend */}
+                    <Pie
+                      data={dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores]}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={70} // Increased outerRadius
+                      fill="#8884d8"
+                      dataKey="value"
+                      nameKey="name"
+                      label={renderCustomizedLabel}
+                    >
+                      {dummyQuestionScores[selectedQuestion as keyof typeof dummyQuestionScores].map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: 'var(--app-blue)', borderColor: 'var(--app-border)', fontSize: '10px' }} 
+                      itemStyle={{ fontSize: '10px' }}
+                      labelStyle={{ fontSize: '10px' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{fontSize: '10px', paddingTop: '10px'}} // Increased font size and added padding
+                      layout="horizontal" 
+                      verticalAlign="bottom" 
+                      align="center" 
+                      iconSize={10} 
+                      iconType="circle"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
