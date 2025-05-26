@@ -10,21 +10,36 @@ import IntroPage from "./pages/IntroPage";
 import NotFound from "./pages/NotFound";
 import AIChat from "./pages/AIChat";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar"; // Import the new sidebar
+import { AppSidebar } from "@/components/AppSidebar";
+import { Button } from "@/components/ui/button"; 
+import { PanelLeft } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-const MainLayout = () => (
-  <SidebarProvider defaultOpen={true} > {/* Sidebar open by default */}
-    <div className="flex h-screen w-full bg-appDark">
-      <AppSidebar />
-      <main className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
-        {/* Content will be rendered here by Outlet */}
-        <Outlet /> 
-      </main>
-    </div>
-  </SidebarProvider>
-);
+const MainLayout = () => {
+  return (
+    <SidebarProvider defaultOpen={true}>
+      <div className="flex h-screen w-full bg-appDark">
+        {/* Persistent sidebar trigger that's always visible */}
+        <div className="fixed top-3 left-3 z-50 md:hidden">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full bg-appBlue/80 text-appText border-appBorder hover:bg-appBlue hover:text-appGreen"
+            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'b', metaKey: true }))}
+          >
+            <PanelLeft className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <AppSidebar />
+        <main className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
+          <Outlet /> 
+        </main>
+      </div>
+    </SidebarProvider>
+  );
+};
 
 const App = () => (
   <ThemeProvider defaultTheme="dark">
@@ -52,4 +67,3 @@ const App = () => (
 );
 
 export default App;
-
