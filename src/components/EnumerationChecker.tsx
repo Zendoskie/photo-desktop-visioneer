@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { X, HelpCircle, PanelLeft, PanelRight, Volume2, Eye, EyeOff, MessageCircle, Mic, Check, Code } from 'lucide-react';
+import { X, HelpCircle, Volume2, MessageCircle, Mic, Check, Code, Eye, EyeOff } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
 import { Label } from "@/components/ui/label";
@@ -18,19 +17,14 @@ const EnumerationChecker: React.FC = () => {
   const [showExpectedAnswer, setShowExpectedAnswer] = useState(true);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState({ correct: 0, wrong: 0, total: 0 });
-  const [showLeftPanel, setShowLeftPanel] = useState(true);
-  const [showRightPanel, setShowRightPanel] = useState(true);
   const [isListening, setIsListening] = useState(false);
   const [activeField, setActiveField] = useState<'question' | 'answer' | 'expectedAnswer' | null>(null);
-  const isMobile = useIsMobile();
   const navigate = useNavigate();
   
-  // Speech recognition setup
   const startSpeechRecognition = (field: 'question' | 'answer' | 'expectedAnswer') => {
     setActiveField(field);
     setIsListening(true);
     
-    // Check if browser supports speech recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (SpeechRecognition) {
@@ -70,7 +64,6 @@ const EnumerationChecker: React.FC = () => {
       
       recognition.start();
       
-      // Stop recognition after 10 seconds
       setTimeout(() => {
         recognition.stop();
       }, 10000);
@@ -84,7 +77,6 @@ const EnumerationChecker: React.FC = () => {
   const handleSubmit = () => {
     if (question.trim() && answer.trim() && expectedAnswer.trim()) {
       setSubmitted(true);
-      // Simple scoring logic (would be replaced with actual comparison)
       const correct = answer.toLowerCase().includes(expectedAnswer.toLowerCase()) ? 1 : 0;
       setScore({
         correct: correct,
@@ -113,121 +105,67 @@ const EnumerationChecker: React.FC = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  React.useEffect(() => {
-    if (isMobile) {
-      setShowLeftPanel(true);
-      setShowRightPanel(false);
-    } else {
-      setShowLeftPanel(true);
-      setShowRightPanel(true);
-    }
-  }, [isMobile]);
-
-  const toggleLeftPanel = () => {
-    if (isMobile) {
-      setShowLeftPanel(true);
-      setShowRightPanel(false);
-    } else {
-      setShowLeftPanel(!showLeftPanel);
-    }
-  };
-
-  const toggleRightPanel = () => {
-    if (isMobile) {
-      setShowLeftPanel(false);
-      setShowRightPanel(true);
-    } else {
-      setShowRightPanel(!showRightPanel);
-    }
-  };
-
   return (
-    <div className="flex flex-col md:flex-row h-full w-full overflow-hidden p-2 md:p-4 gap-2 md:gap-4 bg-appDark">
-      {/* Mobile Panel Toggles - Adjusted to match CodeEvaluator style */}
-      <div className="flex justify-between gap-2 md:hidden p-2 bg-appBlue/80 dark:bg-appBlue/20 rounded-md border border-appBorder">
-        <div className="flex">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={toggleLeftPanel}
-            className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'} hover:text-appGreen`}
-          >
-            <PanelLeft size={16} className="mr-1" />
-            Input
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={toggleRightPanel}
-            className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'} hover:text-appGreen`}
-          >
-            Results
-            <PanelRight size={16} className="ml-1" />
-          </Button>
+    <div className="h-full w-full p-4 space-y-6 bg-appDark">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Code size={24} className="text-appGreen mr-3" />
+          <h1 className="text-2xl font-bold text-appText">Enumeration Checker</h1>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
+                <HelpCircle size={16} className="mr-2" />
+                Help
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="bg-appBlue border-appBorder">
+              <SheetHeader>
+                <SheetTitle className="text-appGreen">How to Use Enumeration Checker</SheetTitle>
+                <SheetDescription className="text-foreground">
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Expected Answer</h3>
+                      <p>Type the expected answer that will be used to check the submitted answer.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Input Your Question</h3>
+                      <p>Type your enumeration question in the Question field.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Provide Answer</h3>
+                      <p>Type your answer or solution in the Answer field.</p>
+                    </div>
+                    <div>
+                      <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Check</h3>
+                      <p>Click the Check button to verify if the answer matches the expected answer.</p>
+                    </div>
+                  </div>
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+          <Button variant="ghost" size="sm" onClick={() => navigate('/ai-chat')} className="text-appText hover:text-appGreen">
+            <MessageCircle size={16} className="mr-2" />
+            AI Chat
+          </Button>
+          <ThemeToggle />
+        </div>
       </div>
 
-      {/* Left Panel - Input Console */}
-      <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex flex-col ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
-        <Card className="flex flex-col flex-grow bg-card border-appBorder shadow-lg">
-          <CardHeader className="py-4 px-4 border-b border-appBorder">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Code size={20} className="text-appGreen mr-2" />
-                <CardTitle className="text-lg font-semibold text-appText">Input Console</CardTitle>
-              </div>
-              <div className="flex items-center gap-1">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
-                      <HelpCircle size={16} className="mr-1" />
-                      How to Use
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent className="bg-appBlue border-appBorder">
-                    <SheetHeader>
-                      <SheetTitle className="text-appGreen">How to Use Enumeration Checker</SheetTitle>
-                      <SheetDescription className="text-foreground">
-                        <div className="space-y-4 mt-4">
-                          <div>
-                            <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Expected Answer</h3>
-                            <p>Type the expected answer that will be used to check the submitted answer.</p>
-                          </div>
-                          <div>
-                            <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Input Your Question</h3>
-                            <p>Type your enumeration question in the Question field.</p>
-                          </div>
-                          <div>
-                            <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Provide Answer</h3>
-                            <p>Type your answer or solution in the Answer field.</p>
-                          </div>
-                          <div>
-                            <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Check</h3>
-                            <p>Click the Check button to verify if the answer matches the expected answer.</p>
-                          </div>
-                          <div className="pt-4 border-t border-appBorder mt-4">
-                            <p className="text-appGreen font-medium">Keyboard Shortcuts:</p>
-                            <p>Press Ctrl+Enter to quickly check your answer.</p>
-                          </div>
-                        </div>
-                      </SheetDescription>
-                    </SheetHeader>
-                  </SheetContent>
-                </Sheet>
-                <div className="hidden md:block">
-                  <ThemeToggle />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="flex flex-col flex-grow p-4 space-y-4">
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <Label htmlFor="expectedAnswer" className="text-appText text-sm font-medium">Expected Answer</Label>
-                <div className="flex items-center">
-                  <Label htmlFor="show-expected" className="mr-2 text-xs text-muted-foreground">
+      {/* Main Content - New Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+        {/* Left Side - Inputs */}
+        <div className="space-y-4">
+          {/* Expected Answer */}
+          <Card className="bg-card border-appBorder shadow-lg">
+            <CardHeader className="py-3 px-4 border-b border-appBorder">
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-lg font-semibold text-appText">Expected Answer</CardTitle>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="show-expected" className="text-xs text-muted-foreground">
                     {showExpectedAnswer ? "Hide" : "Show"}
                   </Label>
                   <Switch 
@@ -238,11 +176,12 @@ const EnumerationChecker: React.FC = () => {
                   />
                 </div>
               </div>
+            </CardHeader>
+            <CardContent className="p-4">
               <div className="relative">
                 <Textarea 
-                  id="expectedAnswer"
                   placeholder="Enter the expected answer..."
-                  className="flex-none h-20 bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300 w-full"
+                  className="h-24 bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300 w-full"
                   value={expectedAnswer}
                   onChange={(e) => setExpectedAnswer(e.target.value)}
                   style={{ 
@@ -269,15 +208,19 @@ const EnumerationChecker: React.FC = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="question" className="text-appText text-sm font-medium mb-1 block">Question</Label>
+            </CardContent>
+          </Card>
+
+          {/* Question */}
+          <Card className="bg-card border-appBorder shadow-lg">
+            <CardHeader className="py-3 px-4 border-b border-appBorder">
+              <CardTitle className="text-lg font-semibold text-appText">Question</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
               <div className="relative">
                 <Textarea 
-                  id="question"
                   placeholder="Enter your enumeration question..."
-                  className="flex-none h-28 bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300 w-full"
+                  className="h-32 bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300 w-full"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -301,13 +244,17 @@ const EnumerationChecker: React.FC = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-            
-            <div className="flex-grow flex flex-col">
-              <Label htmlFor="answer" className="text-appText text-sm font-medium mb-1 block">Answer</Label>
-              <div className="relative flex-grow">
+            </CardContent>
+          </Card>
+
+          {/* Answer */}
+          <Card className="bg-card border-appBorder shadow-lg flex-grow">
+            <CardHeader className="py-3 px-4 border-b border-appBorder">
+              <CardTitle className="text-lg font-semibold text-appText">Your Answer</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 h-[200px]">
+              <div className="relative h-full">
                 <Textarea 
-                  id="answer"
                   placeholder="Enter your answer..."
                   className="h-full w-full bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
                   value={answer}
@@ -332,103 +279,88 @@ const EnumerationChecker: React.FC = () => {
                   </Button>
                 </div>
               </div>
-            </div>
-          </CardContent>
-          <CardFooter className="p-4 border-t border-appBorder">
-            <div className="flex gap-2 w-full">
-              <Button 
-                onClick={handleClear}
-                variant="outline"
-                className="flex-1 border-appBorder text-appText hover:bg-appText/10 hover:text-appGreen"
-              >
-                <X size={16} className="mr-2" />
-                Clear
-              </Button>
-              <Button 
-                onClick={handleSubmit}
-                className="flex-1 bg-appGreen hover:bg-appGreen/90 text-primary-foreground"
-              >
-                <Check size={16} className="mr-2" />
-                Check
-              </Button>
-            </div>
-          </CardFooter>
-        </Card>
-      </div>
-      
-      {/* Right Panel - Check Results */}
-      <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex flex-col ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
-        <Card className="flex flex-col flex-grow bg-card border-appBorder shadow-lg">
-          <CardHeader className="py-4 px-4 border-b border-appBorder">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Check size={20} className="text-appGreen mr-2" /> {/* Changed icon */}
-                <CardTitle className="text-lg font-semibold text-appText">Check Results</CardTitle>
+            </CardContent>
+            <CardFooter className="p-4 border-t border-appBorder">
+              <div className="flex gap-2 w-full">
+                <Button 
+                  onClick={handleClear}
+                  variant="outline"
+                  className="flex-1 border-appBorder text-appText hover:bg-appText/10 hover:text-appGreen"
+                >
+                  <X size={16} className="mr-2" />
+                  Clear
+                </Button>
+                <Button 
+                  onClick={handleSubmit}
+                  className="flex-1 bg-appGreen hover:bg-appGreen/90 text-primary-foreground"
+                >
+                  <Check size={16} className="mr-2" />
+                  Check
+                </Button>
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/ai-chat')}
-                className="text-appText hover:text-appGreen" 
-              >
-                <MessageCircle size={16} className="mr-1" />
-                AI Chat
-              </Button>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="p-4 space-y-4 flex-grow flex flex-col">
-            <div>
-              <Label className="text-appText text-sm font-medium mb-1 block">Score</Label> {/* Label style updated */}
-              <div className="bg-input border border-border p-3 rounded-md min-h-[40px]"> {/* Background and border updated */}
-                {submitted ? (
-                  <div className="flex flex-col gap-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-foreground">Correct:</span>
-                      <span className="text-green-500 font-mono">{score.correct}</span>
+            </CardFooter>
+          </Card>
+        </div>
+        
+        {/* Right Side - Results */}
+        <div>
+          <Card className="h-full bg-card border-appBorder shadow-lg">
+            <CardHeader className="py-3 px-4 border-b border-appBorder">
+              <CardTitle className="text-lg font-semibold text-appText">Check Results</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4 h-[calc(100%-60px)] overflow-y-auto">
+              <div>
+                <Label className="text-appText text-sm font-medium mb-2 block">Score</Label>
+                <div className="bg-input border border-border p-3 rounded-md min-h-[40px]">
+                  {submitted ? (
+                    <div className="flex flex-col gap-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-foreground">Correct:</span>
+                        <span className="text-green-500 font-mono">{score.correct}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-foreground">Wrong:</span>
+                        <span className="text-red-500 font-mono">{score.wrong}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-border pt-2 mt-2">
+                        <span className="text-foreground font-medium">Total Score:</span>
+                        <span className="text-foreground font-mono font-medium">{score.correct}/{score.total}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-foreground">Wrong:</span>
-                      <span className="text-red-500 font-mono">{score.wrong}</span>
-                    </div>
-                    <div className="flex justify-between border-t border-border pt-2 mt-2"> {/* Border updated */}
-                      <span className="text-foreground font-medium">Total Score:</span>
-                      <span className="text-foreground font-mono font-medium">{score.correct}/{score.total}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground text-sm">Not checked yet</span>
-                )}
+                  ) : (
+                    <span className="text-muted-foreground text-sm">Not checked yet</span>
+                  )}
+                </div>
               </div>
-            </div>
-            
-            <div className="flex-grow flex flex-col">
-              <Label className="text-appText text-sm font-medium mb-1 block">Details</Label> {/* Label style updated */}
-              <div className="bg-input border border-border p-3 rounded-md h-full overflow-y-auto text-sm"> {/* Background and border updated */}
-                {submitted ? (
-                  <div className="space-y-3">
-                    <div>
-                      <h3 className="text-appGreen text-xs font-semibold mb-1">EXPECTED ANSWER:</h3> {/* Text color updated */}
-                      <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{expectedAnswer || "N/A"}</p>
+              
+              <div className="flex-grow flex flex-col">
+                <Label className="text-appText text-sm font-medium mb-2 block">Details</Label>
+                <div className="bg-input border border-border p-3 rounded-md flex-grow overflow-y-auto text-sm">
+                  {submitted ? (
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="text-appGreen text-xs font-semibold mb-1">EXPECTED ANSWER:</h3>
+                        <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{expectedAnswer || "N/A"}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-xs font-semibold mb-1">YOUR ANSWER:</h3>
+                        <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{answer || "N/A"}</p>
+                      </div>
+                      <div>
+                        <h3 className="text-appGreen text-xs font-semibold mb-1">ASSESSMENT:</h3>
+                        <p className={`text-xs p-2 rounded font-medium ${score.correct > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
+                          {score.correct > 0 ? '✓ CORRECT ANSWER' : '✗ INCORRECT ANSWER'}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-appGreen text-xs font-semibold mb-1">YOUR ANSWER:</h3> {/* Text color updated */}
-                      <p className="text-foreground bg-muted/30 p-2 rounded text-xs leading-relaxed">{answer || "N/A"}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-appGreen text-xs font-semibold mb-1">ASSESSMENT:</h3> {/* Text color updated */}
-                      <p className={`text-xs p-2 rounded font-medium ${score.correct > 0 ? 'bg-green-500/10 text-green-600' : 'bg-red-500/10 text-red-600'}`}>
-                        {score.correct > 0 ? '✓ CORRECT ANSWER' : '✗ INCORRECT ANSWER'}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground text-sm">Submit your answer to see detailed results.</span>
-                )}
+                  ) : (
+                    <span className="text-muted-foreground text-sm">Submit your answer to see detailed results.</span>
+                  )}
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
