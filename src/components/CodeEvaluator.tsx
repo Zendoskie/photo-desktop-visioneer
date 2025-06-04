@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mic, Sparkles, Volume2, Settings } from 'lucide-react';
-import { motion } from "framer-motion";
+import { X, HelpCircle, PanelLeft, PanelRight, Volume2, MessageCircle, Mic, Settings, Code, Check } from 'lucide-react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { useNavigate } from 'react-router-dom';
 
 const CodeEvaluator: React.FC = () => {
@@ -15,8 +15,11 @@ const CodeEvaluator: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [rating, setRating] = useState('');
   const [justification, setJustification] = useState('');
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showRightPanel, setShowRightPanel] = useState(true);
   const [isListening, setIsListening] = useState(false);
   const [activeField, setActiveField] = useState<'query' | 'answer' | null>(null);
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
 
   // Speech recognition setup
@@ -62,16 +65,14 @@ const CodeEvaluator: React.FC = () => {
       setActiveField(null);
     }
   };
-
   const handleSubmit = () => {
     if (query.trim() && answer.trim()) {
       setSubmitted(true);
       // Simulate evaluation results
-      setRating('Excellent');
-      setJustification('The answer correctly addressed the main points and used appropriate language.');
+      setRating('4/5 - Above Average');
+      setJustification('The answer demonstrates good understanding of the core concepts and provides clear explanations. However, it could benefit from more specific examples to illustrate the points made.');
     }
   };
-
   const handleClear = () => {
     setQuery('');
     setAnswer('');
@@ -79,18 +80,15 @@ const CodeEvaluator: React.FC = () => {
     setRating('');
     setJustification('');
   };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && e.ctrlKey) {
       handleSubmit();
     }
   };
-
   const handleTextToSpeech = (text: string) => {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
   };
-
   const handleAIDetector = () => {
     // Simulate AI detection
     if (answer.trim()) {
@@ -98,134 +96,203 @@ const CodeEvaluator: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (isMobile) {
+      setShowLeftPanel(true);
+      setShowRightPanel(false);
+    } else {
+      setShowLeftPanel(true);
+      setShowRightPanel(true);
+    }
+  }, [isMobile]);
+
+  const toggleLeftPanel = () => {
+    if (isMobile) {
+      setShowLeftPanel(true);
+      setShowRightPanel(false);
+    } else {
+      setShowLeftPanel(!showLeftPanel);
+    }
+  };
+
+  const toggleRightPanel = () => {
+    if (isMobile) {
+      setShowLeftPanel(false);
+      setShowRightPanel(true);
+    } else {
+      setShowRightPanel(!showRightPanel);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4">
-      <h1 className="text-3xl font-bold text-teal-400 mb-6">🌟 Visioneer</h1>
+    <div className="flex flex-col md:flex-row h-full w-full overflow-hidden p-2 md:p-4 gap-2 md:gap-4 bg-appDark">
+      {/* Mobile Panel Toggles */}
+      <div className="flex justify-between gap-2 md:hidden p-2 bg-appBlue/80 dark:bg-appBlue/20 rounded-md border border-appBorder">
+        <div className="flex">
+          <Button variant="ghost" size="sm" onClick={toggleLeftPanel} className={`${showLeftPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}>
+            <PanelLeft size={16} className="mr-1" />
+            Input
+          </Button>
+          <Button variant="ghost" size="sm" onClick={toggleRightPanel} className={`${showRightPanel ? 'bg-appBlue/50 text-appGreen' : 'text-appText'}`}>
+            Results
+            <PanelRight size={16} className="ml-1" />
+          </Button>
+        </div>
+        <ThemeToggle />
+      </div>
 
-      <Tabs defaultValue="evaluate" className="mb-6">
-        <TabsList className="bg-gray-700 rounded-xl p-1">
-          <TabsTrigger value="evaluate" onClick={() => navigate('/evaluate')}>Evaluate</TabsTrigger>
-          <TabsTrigger value="enumeration" onClick={() => navigate('/enumeration')}>Enumeration</TabsTrigger>
-          <TabsTrigger value="analytics" onClick={() => navigate('/analytics')}>Analytics</TabsTrigger>
-          <TabsTrigger value="chat" onClick={() => navigate('/ai-chat')}>AI Chat</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="bg-gray-800 shadow-xl rounded-2xl">
-            <CardContent className="p-6 space-y-4">
-              <h2 className="text-xl font-semibold">🔍 Step 1: Enter Inputs</h2>
-              <div>
-                <label className="block text-sm mb-1">Question</label>
-                <div className="relative">
-                  <Textarea
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Type your question here..."
-                    className="pr-20 bg-gray-700 border-gray-600 text-white"
-                  />
-                  <div className="absolute right-2 top-2 flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => startSpeechRecognition('query')}
-                      className={`h-6 w-6 ${activeField === 'query' && isListening ? 'text-red-500 animate-pulse' : 'text-gray-400 hover:text-white'}`}
-                    >
-                      <Mic size={16} />
+      {/* Left Panel: Input Console */}
+      <div className={`${showLeftPanel ? 'flex' : 'hidden'} md:flex ${showRightPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
+        <Card className="flex flex-col h-full w-full bg-card border-appBorder shadow-lg">
+          <CardHeader className="py-4 px-4 border-b border-appBorder">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Code size={20} className="text-appGreen mr-2" />
+                <CardTitle className="text-lg font-semibold text-appText">Input Console</CardTitle>
+              </div>
+              <div className="flex items-center gap-1">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-appText hover:text-appGreen">
+                      <HelpCircle size={16} className="mr-1" />
+                      How to Use
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleTextToSpeech(query)}
-                      className="h-6 w-6 text-gray-400 hover:text-white"
-                    >
-                      <Volume2 size={16} />
-                    </Button>
-                  </div>
+                  </SheetTrigger>
+                  <SheetContent className="bg-appBlue border-appBorder">
+                    <SheetHeader>
+                      <SheetTitle className="text-appGreen">How to Use the Evaluator</SheetTitle>
+                      <SheetDescription className="text-foreground">
+                        <div className="space-y-4 mt-4">
+                          <div>
+                            <h3 className="text-appGreen text-base font-medium mb-1">Step 1: Input Your Question</h3>
+                            <p>Type your question in the Question field or use the microphone button for speech-to-text.</p>
+                          </div>
+                          <div>
+                            <h3 className="text-appGreen text-base font-medium mb-1">Step 2: Provide Your Answer</h3>
+                            <p>Type your answer in the Answer field or use the microphone button for speech-to-text.</p>
+                          </div>
+                          <div>
+                            <h3 className="text-appGreen text-base font-medium mb-1">Step 3: Evaluate</h3>
+                            <p>Click the Evaluate button to submit your answer for evaluation.</p>
+                          </div>
+                          <div>
+                            <h3 className="text-appGreen text-base font-medium mb-1">Step 4: Review Results</h3>
+                            <p>Check the evaluation results in the right panel for feedback on your answer.</p>
+                          </div>
+                          <div>
+                            <h3 className="text-appGreen text-base font-medium mb-1">Additional Features</h3>
+                            <p>- Use the AI Detector button to analyze if text is AI-generated</p>
+                            <p>- Use the speaker buttons for text-to-speech functionality</p>
+                            <p>- Navigate to AI Chat for more detailed assistance</p>
+                          </div>
+                          <div className="pt-4 border-t border-appBorder mt-4">
+                          </div>
+                        </div>
+                      </SheetDescription>
+                    </SheetHeader>
+                  </SheetContent>
+                </Sheet>
+                <div className="hidden md:block">
+                  <ThemeToggle />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm mb-1">Answer</label>
-                <div className="relative">
-                  <Textarea
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    placeholder="Type your answer here..."
-                    className="pr-20 bg-gray-700 border-gray-600 text-white min-h-32"
-                  />
-                  <div className="absolute right-2 top-2 flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => startSpeechRecognition('answer')}
-                      className={`h-6 w-6 ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'text-gray-400 hover:text-white'}`}
-                    >
-                      <Mic size={16} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleTextToSpeech(answer)}
-                      className="h-6 w-6 text-gray-400 hover:text-white"
-                    >
-                      <Volume2 size={16} />
-                    </Button>
-                  </div>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-grow flex flex-col p-4 space-y-4">
+            <div>
+              <Label htmlFor="query-input" className="text-appText text-sm font-medium mb-1 block">Question</Label>
+              <div className="relative">
+                <Textarea
+                  id="query-input"
+                  placeholder="Enter your question..."
+                  className="h-32 bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300 w-full"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <div className="absolute right-2 top-2 flex gap-1">
+                  <Button variant="ghost" size="icon" onClick={() => startSpeechRecognition('query')} className={`text-appText h-7 w-7 ${activeField === 'query' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}>
+                    <Mic size={16} />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleTextToSpeech(query)} className="text-appText h-7 w-7 hover:text-appGreen">
+                    <Volume2 size={16} />
+                  </Button>
                 </div>
               </div>
-              <div className="flex gap-4">
-                <Button variant="outline" onClick={handleAIDetector} className="border-gray-600 text-white hover:bg-gray-700">
-                  <Settings size={16} className="mr-2" />
-                  AI Detector
-                </Button>
-                <Button variant="outline" onClick={handleClear} className="border-gray-600 text-white hover:bg-gray-700">
-                  Clear
-                </Button>
-                <Button onClick={handleSubmit} className="bg-teal-500 text-white hover:bg-teal-600">
-                  <Sparkles size={16} className="mr-2" />
-                  ✅ Evaluate Now
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <Card className="bg-gray-800 shadow-xl rounded-2xl">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">📊 Evaluation Results</h2>
-              {submitted ? (
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-sm text-gray-400">Rating:</span>
-                    <Badge className="ml-2 bg-green-500 hover:bg-green-600">{rating}</Badge>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-400">Justification:</span>
-                    <p className="text-gray-200 mt-1">
-                      {justification}
-                    </p>
-                  </div>
+            </div>
+            
+            <div className="flex-grow flex flex-col">
+              <Label htmlFor="answer-input" className="text-appText text-sm font-medium mb-1 block">Answer</Label>
+              <div className="relative flex-grow">
+                <Textarea
+                  id="answer-input"
+                  placeholder="Enter your answer..."
+                  className="h-full w-full bg-input text-foreground text-sm border-border resize-none focus:ring-appGreen focus:border-appGreen transition-all duration-300"
+                  value={answer}
+                  onChange={e => setAnswer(e.target.value)}
+                />
+                <div className="absolute right-2 top-2 flex gap-1">
+                  <Button variant="ghost" size="icon" onClick={() => startSpeechRecognition('answer')} className={`text-appText h-7 w-7 ${activeField === 'answer' && isListening ? 'text-red-500 animate-pulse' : 'hover:text-appGreen'}`}>
+                    <Mic size={16} />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleTextToSpeech(answer)} className="text-appText h-7 w-7 hover:text-appGreen">
+                    <Volume2 size={16} />
+                  </Button>
                 </div>
-              ) : (
-                <div className="text-gray-400 italic">Not evaluated yet...</div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 border-t border-appBorder">
+            <div className="flex gap-2 w-full">
+              <Button onClick={handleClear} variant="outline" className="flex-1 border-appBorder text-appText hover:bg-appText/10 hover:text-appGreen">
+                <X size={16} className="mr-2" />
+                Clear
+              </Button>
+              <Button onClick={handleAIDetector} variant="outline" className="flex-1 border-appBorder text-appText hover:bg-appText/10 hover:text-appGreen">
+                <Settings size={16} className="mr-2" />
+                AI Detector
+              </Button>
+              <Button onClick={handleSubmit} className="flex-1 bg-appGreen hover:bg-appGreen/90 text-primary-foreground">
+                <Check size={16} className="mr-2"/> Evaluate
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+      
+      {/* Right Panel: Evaluation Results */}
+      <div className={`${showRightPanel ? 'flex' : 'hidden'} md:flex ${showLeftPanel && !isMobile ? 'md:w-1/2' : 'md:w-full'}`}>
+        <Card className="flex flex-col h-full w-full bg-card border-appBorder shadow-lg">
+          <CardHeader className="py-4 px-4 border-b border-appBorder">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <MessageCircle size={20} className="text-appGreen mr-2" />
+                <CardTitle className="text-lg font-semibold text-appText">Evaluation Results</CardTitle>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/ai-chat')} className="text-appText hover:text-appGreen">
+                <MessageCircle size={16} className="mr-1" />
+                AI Chat
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-grow p-4 space-y-4">
+            <div>
+              <Label className="text-appText text-sm font-medium mb-1 block">Rating</Label>
+              <div className="bg-input border border-border p-3 rounded-md min-h-[40px]">
+                <span className="text-foreground text-sm">{submitted ? rating : "Not evaluated"}</span>
+              </div>
+            </div>
+            
+            <div className="flex-grow flex flex-col">
+              <Label className="text-appText text-sm font-medium mb-1 block">Justification</Label>
+              <div className="bg-input border border-border p-3 rounded-md h-full overflow-y-auto min-h-[100px]">
+                <span className="text-foreground text-sm whitespace-pre-wrap">{submitted ? justification : "No justification provided"}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 };
-
 export default CodeEvaluator;
