@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -99,7 +100,7 @@ const CodeEvaluator: React.FC = () => {
       <div className="flex items-center justify-between p-6 pb-4">
         <div className="flex items-center">
           <Code size={24} className="text-appGreen mr-3" />
-          <h1 className="text-2xl font-bold text-appText">Code Evaluator</h1>
+          <h1 className="text-2xl font-bold text-appText">OpenE</h1>
         </div>
         <div className="flex items-center gap-3">
           <Sheet>
@@ -111,7 +112,7 @@ const CodeEvaluator: React.FC = () => {
             </SheetTrigger>
             <SheetContent className="bg-appBlue border-appBorder">
               <SheetHeader>
-                <SheetTitle className="text-appGreen">How to Use the Evaluator</SheetTitle>
+                <SheetTitle className="text-appGreen">How to Use OpenE</SheetTitle>
                 <SheetDescription className="text-foreground">
                   <div className="space-y-4 mt-4">
                     <div>

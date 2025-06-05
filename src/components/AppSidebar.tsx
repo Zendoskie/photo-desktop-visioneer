@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Code, ListChecks, BarChart3, MessageCircle } from 'lucide-react';
@@ -36,7 +35,7 @@ export function AppSidebar() {
       )}
     >
       <SidebarHeader className="p-3 flex items-center border-b border-appBorder">
-        {!isCollapsed && <span className="font-semibold text-appGreen text-lg ml-2">Visioneer</span>}
+        {!isCollapsed && <span className="font-semibold text-appGreen text-lg ml-2">OpenE</span>}
         <SidebarTrigger 
           className={cn(
             "text-appText hover:text-appGreen data-[state=open]:text-appGreen",
@@ -75,4 +74,3 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
-

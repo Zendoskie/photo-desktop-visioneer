@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const AIChat: React.FC = () => {
   const [message, setMessage] = React.useState('');
   const [chatHistory, setChatHistory] = React.useState<Array<{role: string, content: string}>>([
-    {role: 'assistant', content: 'Hello! I\'m your AI Evaluator assistant. How can I help you today?'}
+    {role: 'assistant', content: 'Hello! I\'m your OpenE assistant. How can I help you today?'}
   ]);
 
   const handleSendMessage = () => {
@@ -48,7 +48,7 @@ const AIChat: React.FC = () => {
                 Back
               </Button>
             </Link>
-            <CardTitle className="text-lg font-medium text-foreground">AI Evaluator Chat</CardTitle>
+            <CardTitle className="text-lg font-medium text-foreground">OpenE Chat</CardTitle>
           </div>
           <ThemeToggle />
         </CardHeader>
